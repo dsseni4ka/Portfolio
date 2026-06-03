@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { BubbleSettingsProvider } from "@/lib/bubble-settings-store";
+import { getHeroContentScale } from "@/lib/hero-bubble-bounds";
 import { FIGMA_FRAME } from "@/lib/figma-hero";
 
 const BubblesCanvas = dynamic(() => import("./BubblesCanvas"), {
@@ -14,17 +15,13 @@ type HeroFigmaStageProps = {
   children: ReactNode;
 };
 
-/** Scales the 1512×982 Figma artboard to fit the viewport. */
+/** Full-viewport bubbles; Figma typography scaled and centered on top. */
 export default function HeroFigmaStage({ children }: HeroFigmaStageProps) {
-  const [scale, setScale] = useState(1);
+  const [contentScale, setContentScale] = useState(1);
   const [mounted, setMounted] = useState(false);
 
   const updateScale = useCallback(() => {
-    const s = Math.min(
-      window.innerWidth / FIGMA_FRAME.width,
-      window.innerHeight / FIGMA_FRAME.height,
-    );
-    setScale(s);
+    setContentScale(getHeroContentScale());
   }, []);
 
   useEffect(() => {
@@ -36,18 +33,18 @@ export default function HeroFigmaStage({ children }: HeroFigmaStageProps) {
 
   return (
     <BubbleSettingsProvider>
-      <div className="flex h-full w-full items-center justify-center">
-        <div
-          className="relative shrink-0"
-          suppressHydrationWarning
-          style={{
-            width: FIGMA_FRAME.width,
-            height: FIGMA_FRAME.height,
-            transform: mounted ? `scale(${scale})` : undefined,
-          }}
-        >
-          {mounted ? <BubblesCanvas /> : null}
-          <div className="relative z-10 pointer-events-none bg-transparent">
+      <div className="relative h-full w-full overflow-hidden">
+        {mounted ? <BubblesCanvas /> : null}
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+          <div
+            className="relative shrink-0"
+            suppressHydrationWarning
+            style={{
+              width: FIGMA_FRAME.width,
+              height: FIGMA_FRAME.height,
+              transform: mounted ? `scale(${contentScale})` : undefined,
+            }}
+          >
             {children}
           </div>
         </div>

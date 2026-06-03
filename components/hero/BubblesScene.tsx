@@ -1,14 +1,14 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import ApplyBubbleEnvironment from "./ApplyBubbleEnvironment";
 import { getGlassQuality } from "@/lib/bubble-glass";
 import { BUBBLE_PALETTE } from "@/lib/bubble-palette";
 import { getBubbleSceneLights } from "@/lib/bubble-scene-lights";
 import { useBubbleSettings } from "@/lib/bubble-settings-store";
-import { getTotalBlobCount, MAX_BLOBS } from "@/lib/bubble2/blobs";
+import { MAX_BLOBS } from "@/lib/bubble2/blobs";
 import { mapBubble2Runtime } from "@/lib/bubble2/map-settings";
 import { WOBBLE_SPHERE } from "@/lib/wobble-reference";
 import { useIsMobile, usePrefersReducedMotion } from "@/lib/hooks";
@@ -26,10 +26,9 @@ function WhiteBubbleBackdrop() {
 
 function SceneContent() {
   const { settings } = useBubbleSettings();
-  const { scene, camera, gl } = useThree();
+  const { scene, gl } = useThree();
   const reducedMotion = usePrefersReducedMotion();
   const mobile = useIsMobile();
-  const mouse = useRef({ x: 0, y: 0 });
   const quality = useMemo(
     () => getGlassQuality(mobile, reducedMotion),
     [mobile, reducedMotion],
@@ -41,8 +40,7 @@ function SceneContent() {
   );
 
   const blobIndices = useMemo(() => {
-    const total = runtime.activeBlobCount ?? getTotalBlobCount(runtime.blobCount);
-    const count = Math.min(total, MAX_BLOBS, mobile ? 12 : total);
+    const count = Math.min(runtime.blobCount, MAX_BLOBS, mobile ? 9 : 15);
     return Array.from({ length: count }, (_, i) => i);
   }, [runtime.blobCount, mobile]);
 
@@ -64,25 +62,6 @@ function SceneContent() {
   useEffect(() => {
     gl.toneMappingExposure = settings.toneMappingExposure;
   }, [gl, settings.toneMappingExposure]);
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouse.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
-    };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  useFrame(() => {
-    if (reducedMotion || !settings.cameraParallax) return;
-    const strength = settings.cameraParallaxStrength;
-    const targetX = mouse.current.x * 0.25 * strength;
-    const targetY = -mouse.current.y * 0.18 * strength;
-    camera.position.x += (targetX - camera.position.x) * 0.02;
-    camera.position.y += (targetY + 0.05 - camera.position.y) * 0.02;
-    camera.lookAt(0, 0, 0);
-  });
 
   const animateBubbles =
     settings.animationEnabled && !reducedMotion;

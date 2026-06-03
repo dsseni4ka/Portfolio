@@ -2,7 +2,6 @@ import {
   DEFAULT_BUBBLE_SETTINGS,
   type BubbleSettings,
 } from "@/lib/bubble-settings";
-import { getTotalBlobCount } from "@/lib/bubble2/blobs";
 
 /** Runtime uniforms for bubble2 ray-tracer (from panel + bubble2 defaults). */
 export type Bubble2Runtime = {
@@ -27,9 +26,6 @@ export type Bubble2Runtime = {
   rimStrength: number;
   chromaticRim: number;
   fresnelBoost: number;
-  /** Main bubbles (rayBlobCount); shader uses activeBlobCount. */
-  mainBlobCount: number;
-  activeBlobCount: number;
   blobCount: number;
   metaThreshold: number;
   metaBlend: number;
@@ -131,21 +127,9 @@ export function mapBubble2Runtime(
     rimStrength: num(settings.rimStrength, DEFAULT_BUBBLE_SETTINGS.rimStrength),
     chromaticRim: num(settings.rayChromaticRim, RAY_DEFAULTS.chromaticRim),
     fresnelBoost: num(settings.rayFresnelBoost, RAY_DEFAULTS.fresnelBoost),
-    mainBlobCount: Math.max(
+    blobCount: Math.max(
       2,
-      Math.min(8, Math.round(num(settings.rayBlobCount, RAY_DEFAULTS.blobCount))),
-    ),
-    activeBlobCount: getTotalBlobCount(
-      Math.max(
-        2,
-        Math.min(8, Math.round(num(settings.rayBlobCount, RAY_DEFAULTS.blobCount))),
-      ),
-    ),
-    blobCount: getTotalBlobCount(
-      Math.max(
-        2,
-        Math.min(8, Math.round(num(settings.rayBlobCount, RAY_DEFAULTS.blobCount))),
-      ),
+      Math.min(15, Math.round(num(settings.rayBlobCount, RAY_DEFAULTS.blobCount))),
     ),
     metaThreshold: num(settings.rayMetaThreshold, RAY_DEFAULTS.metaThreshold),
     metaBlend: num(settings.rayMetaBlend, RAY_DEFAULTS.metaBlend),

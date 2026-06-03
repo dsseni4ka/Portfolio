@@ -23,7 +23,7 @@ uniform vec4 u_blobs[8];
 out vec4 fragColor;
 
 const float PI = 3.14159265359;
-const int MAX_BLOBS = 16;
+const int MAX_BLOBS = 8;
 
 #define DISPERSION u_settings0.y
 #define FILM_STRENGTH u_settings0.z

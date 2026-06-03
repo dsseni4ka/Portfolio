@@ -24,7 +24,7 @@ export default function BubblesCanvas() {
 
   return (
     <div
-      data-bubble-layer
+      data-hero-motion
       className="absolute inset-0 z-[1] min-h-full min-w-full bg-background"
       aria-hidden
     >

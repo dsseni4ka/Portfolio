@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import type { BubbleSettings } from "@/lib/bubble-settings";
 import {
   getHeroBubbleBounds,
+  getHeroMotionLayerAspect,
   getHeroViewportScale,
   type HeroBubbleBounds,
 } from "@/lib/hero-bubble-bounds";
@@ -12,13 +13,11 @@ import {
   clampBlobsToBounds,
   createDriftingHeroBlob,
   createSpreadBlobs,
-  getTotalBlobCount,
   MAX_BLOBS,
   packBlobs,
   updateBlobs,
   type MetaballBlob,
 } from "@/lib/bubble2/blobs";
-import { getHeroCursor } from "@/lib/bubble2/hero-cursor";
 
 export type BubbleMotionSnapshot = {
   blobs: MetaballBlob[];
@@ -29,7 +28,7 @@ export type BubbleMotionSnapshot = {
 let snapshot: BubbleMotionSnapshot | null = null;
 let lastBlobConfigKey = "";
 let lastBoundsKey = "";
-let motionTime = 0;
+let simTime = 0;
 
 const listeners = new Set<() => void>();
 
@@ -40,7 +39,7 @@ function subscribe(listener: () => void) {
 
 function ensureSnapshot() {
   if (!snapshot) {
-    const blobs = createSpreadBlobs(6, 0.6);
+    const blobs = createSpreadBlobs(13);
     snapshot = {
       blobs,
       blobData: packBlobs(blobs),
@@ -67,6 +66,7 @@ function resolveBounds(
   return getHeroBubbleBounds(runtime.bounds, {
     mobile,
     viewportScale: getHeroViewportScale(),
+    layerAspect: getHeroMotionLayerAspect(),
   });
 }
 
@@ -77,13 +77,13 @@ function boundsKey(bounds: HeroBubbleBounds) {
 function rebuildBlobs(settings: BubbleSettings, mobile: boolean) {
   const s = ensureSnapshot();
   const runtime = mapBubble2Runtime(settings, mobile);
-  const mainCount = runtime.mainBlobCount;
+  const count = runtime.blobCount;
   const frameBounds = resolveBounds(settings, mobile);
 
-  if (mainCount <= 1) {
+  if (count <= 1) {
     s.blobs = createDriftingHeroBlob(runtime.heroBlobRadius);
   } else {
-    s.blobs = createSpreadBlobs(mainCount, runtime.heroBlobRadius);
+    s.blobs = createSpreadBlobs(count, frameBounds, runtime.heroBlobRadius);
   }
 
   clampBlobsToBounds(s.blobs, frameBounds);
@@ -97,7 +97,7 @@ export function syncBubbleMotion(
 ) {
   const runtime = mapBubble2Runtime(settings, mobile);
   const frameBounds = resolveBounds(settings, mobile);
-  const configKey = `spread-v3:${runtime.activeBlobCount}:${runtime.heroBlobRadius}`;
+  const configKey = `${runtime.blobCount}:${runtime.heroBlobRadius}`;
   const bKey = boundsKey(frameBounds);
 
   if (configKey !== lastBlobConfigKey) {
@@ -128,15 +128,10 @@ export function tickBubbleMotion(
   const runtime = mapBubble2Runtime(settings, mobile);
   const frameBounds = resolveBounds(settings, mobile);
   const s = ensureSnapshot();
-  motionTime += dt;
+  const step = dt * runtime.driftSpeed;
+  simTime += step;
 
-  updateBlobs(
-    s.blobs,
-    dt * runtime.driftSpeed,
-    frameBounds,
-    getHeroCursor(),
-    motionTime,
-  );
+  updateBlobs(s.blobs, step, { ...frameBounds, simTime });
   packBlobs(s.blobs, s.blobData);
   publish();
 }
