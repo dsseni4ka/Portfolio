@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Holographic Bubble</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #fff;
+      font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      image-rendering: auto;
+    }
+    canvas:active { cursor: grabbing; }
+
+    .hint {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.35);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .panel {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 280px;
+      max-height: calc(100vh - 32px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: rgba(12, 12, 18, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 12px;
+      z-index: 10;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .panel.collapsed .panel-body { display: none; }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+
+    .panel-toggle {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: inherit;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .panel-toggle:hover { background: rgba(255, 255, 255, 0.14); }
+
+    .panel-body {
+      overflow-y: auto;
+      padding: 8px 12px 14px;
+    }
+
+    .section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.4);
+      margin: 12px 0 6px;
+      padding-top: 4px;
+    }
+
+    .section-title:first-child { margin-top: 4px; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 2px;
+      cursor: default;
+    }
+
+    .row-label { color: rgba(255, 255, 255, 0.65); }
+
+    .row-control {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 130px;
+    }
+
+    input[type="range"] {
+      width: 88px;
+      height: 4px;
+      accent-color: #7eb8ff;
+      cursor: pointer;
+    }
+
+    output {
+      min-width: 36px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 11px;
+    }
+
+    select {
+      width: 100%;
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.35);
+      color: inherit;
+      font-size: 12px;
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #7eb8ff;
+      cursor: pointer;
+    }
+
+    .reset-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover { background: rgba(255, 255, 255, 0.1); }
+
+    @media (max-width: 520px) {
+      .panel {
+        top: auto;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        max-height: 45vh;
+        border-radius: 12px 12px 0 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <p class="hint">Drag to pan · scroll to zoom · bubbles float in 2D</p>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
