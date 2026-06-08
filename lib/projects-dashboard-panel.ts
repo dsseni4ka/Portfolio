@@ -5,7 +5,7 @@ export const OWOW_DASHBOARD_PANEL = {
   tags: [
     { x: 204, y: 411, label: "Next.js" },
     { x: 301, y: 411, label: "Fullstack" },
-    { x: 417, y: 411, label: "design system" },
+    { x: 417, y: 411, label: "Design System" },
   ],
   title: {
     x: 191,
@@ -50,8 +50,8 @@ export const OWOW_DASHBOARD_CONTINUATION_PANEL = {
     y: 385,
     width: 815,
     height: 530,
-    src: "/projects/dashboard-screens.png",
-    alt: "OWOW dashboard screen designs",
+    src: "/projects/dashboard-screens.jpg",
+    alt: "OWOW dashboard Figma design workspace",
   },
   /** image 18 — Figma workspace view. */
   workspace: {

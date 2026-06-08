@@ -1,3 +1,5 @@
+import { PROJECTS_IMAGE_RADIUS } from "@/lib/projects-owow-panel";
+
 /** Eindhoven Pride intro — Figma global x=16307 … 18484 (node 88:151). */
 export const EINDHOVEN_PRIDE_PANEL = {
   width: 2177,
@@ -10,7 +12,7 @@ export const EINDHOVEN_PRIDE_PANEL = {
   },
   subtitle: {
     x: 603,
-    y: 604,
+    y: 594,
     fontSize: 120.765,
   },
   title: {
@@ -19,26 +21,26 @@ export const EINDHOVEN_PRIDE_PANEL = {
     fontSize: 120.765,
   },
   tags: [
-    { x: 0, y: 801, label: "Adobe After Effects" },
-    { x: 213, y: 801, label: "Davinci Resolve" },
+    { x: 0, y: 821, label: "Adobe After Effects" },
+    { x: 213, y: 821, label: "Davinci Resolve" },
   ],
   logo: {
     x: 1314,
     y: 119,
     width: 396,
     height: 703,
-    radius: 19,
-    src: "/projects/pride-logo.png",
-    alt: "Eindhoven Pride logo",
+    radius: PROJECTS_IMAGE_RADIUS,
+    src: "/projects/pride-logo.webm",
+    alt: "Eindhoven Pride logo animation",
   },
   pattern: {
     x: 1768,
     y: 207,
     width: 409,
     height: 727,
-    radius: 35,
-    src: "/projects/pride-pattern.png",
-    alt: "Eindhoven Pride zigzag pattern",
+    radius: PROJECTS_IMAGE_RADIUS,
+    src: "/projects/pride-theme-reveal.webm",
+    alt: "Eindhoven Pride theme reveal animation",
   },
 } as const;
 
@@ -83,7 +85,7 @@ export const EINDHOVEN_PRIDE_FILMING_PANEL = {
     y: 1,
     width: 552,
     height: 981,
-    src: "/projects/pride-pattern-wide.png",
-    alt: "Eindhoven Pride zigzag pattern",
+    src: "/projects/pride-filming-wide.webm",
+    alt: "Eindhoven Pride filming screen recording",
   },
 } as const;

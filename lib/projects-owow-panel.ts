@@ -1,6 +1,9 @@
 /** Figma MacBook Pro 14″ frame — OWOW “Atlas in Motion” panel (node 88:151). */
 export const PROJECTS_INTRO_PANEL_WIDTH = 1080;
 
+/** Uniform corner radius for project section images (design px, scaled via --projects-scale). */
+export const PROJECTS_IMAGE_RADIUS = 18;
+
 export const OWOW_PANEL = {
   /** Global x=1080 → panel origin; width through image right edge (2903). */
   width: 1823,
@@ -10,7 +13,7 @@ export const OWOW_PANEL = {
     y: 98,
     width: 1023,
     height: 556,
-    radius: 55,
+    radius: PROJECTS_IMAGE_RADIUS,
   },
   body: {
     x: 254,
@@ -30,7 +33,7 @@ export const OWOW_PANEL = {
   },
   tags: [
     { x: 8, y: 595, label: "GSAP" },
-    { x: 84, y: 595, label: "web animations" },
+    { x: 84, y: 595, label: "Web Animation" },
   ],
   visit: {
     x: 1710,
@@ -69,7 +72,7 @@ export const OWOW_LANDING_PANEL = {
     y: 122,
     width: 728,
     height: 437,
-    radius: 38,
+    radius: PROJECTS_IMAGE_RADIUS,
   },
   techStack: {
     x: 842,
@@ -82,7 +85,7 @@ export const OWOW_LANDING_PANEL = {
     y: 376,
     width: 949,
     height: 516,
-    radius: 55,
+    radius: PROJECTS_IMAGE_RADIUS,
   },
   contest: {
     x: 2156,
@@ -100,4 +103,14 @@ export const OWOW_LANDING_PANEL = {
 
 export function projectsPx(value: number) {
   return `calc(${value}px * var(--projects-scale, 1))`;
+}
+
+/** Clips images/videos to the shared project corner radius (works inside GSAP transforms). */
+export function projectsImageFrameStyle() {
+  const radius = projectsPx(PROJECTS_IMAGE_RADIUS);
+  return {
+    borderRadius: radius,
+    overflow: "hidden" as const,
+    transform: "translateZ(0)",
+  };
 }

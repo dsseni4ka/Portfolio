@@ -1,6 +1,7 @@
 import ProjectsDesignBox from "./ProjectsDesignBox";
 import { OWOW_DASHBOARD_PANEL } from "@/lib/projects-dashboard-panel";
 import { projectsPx } from "@/lib/projects-owow-panel";
+import OwowDashboardVideoMockup from "./OwowDashboardVideoMockup";
 import { ProjectPanel } from "./ProjectUi";
 
 export default function OwowDashboardPanel() {
@@ -17,6 +18,7 @@ export default function OwowDashboardPanel() {
             key={tag.label}
             x={tag.x}
             y={tag.y}
+            parallax="text"
             className="font-mono font-light leading-normal whitespace-nowrap text-[#828282]"
             style={{ fontSize: projectsPx(16) }}
           >
@@ -27,6 +29,7 @@ export default function OwowDashboardPanel() {
         <ProjectsDesignBox
           x={title.x}
           y={title.y}
+          parallax="text"
           className="font-sans font-bold leading-normal whitespace-nowrap text-black"
           style={{ fontSize: projectsPx(title.fontSize) }}
         >
@@ -36,6 +39,7 @@ export default function OwowDashboardPanel() {
         <ProjectsDesignBox
           x={subtitle.x}
           y={subtitle.y}
+          parallax="text"
           className="font-year leading-normal whitespace-nowrap text-black"
           style={{ fontSize: projectsPx(subtitle.fontSize) }}
         >
@@ -46,27 +50,18 @@ export default function OwowDashboardPanel() {
           x={body.x}
           y={body.y}
           width={body.width}
+          parallax="text"
           className="font-sans font-medium leading-normal text-black"
           style={{ fontSize: projectsPx(body.fontSize) }}
         >
           Full stack client success and monitoring dashboard for OWOW clients
         </ProjectsDesignBox>
 
-        <ProjectsDesignBox
-          x={mockup.x}
-          y={mockup.y}
-          width={mockup.width}
-          height={mockup.height}
-          className="relative overflow-hidden"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/projects/dashboard-main.png"
-            alt="OWOW client success dashboard"
-            className="pointer-events-none h-full w-full object-cover"
-            decoding="async"
-          />
-        </ProjectsDesignBox>
+        <OwowDashboardVideoMockup
+          mockup={mockup}
+          src="/projects/owow-dashboard-demo.webm"
+          label="OWOW client success dashboard demo"
+        />
       </div>
     </ProjectPanel>
   );

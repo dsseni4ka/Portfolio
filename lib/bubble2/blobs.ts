@@ -6,7 +6,7 @@ export const MAX_BLOBS = 10;
 
 /** Per-blob radius = base × scale in [0.5, 2.0] (−50% … +100%). */
 export const BLOB_RADIUS_SCALE_MIN = 0.5;
-export const BLOB_RADIUS_SCALE_MAX = 2.0;
+export const BLOB_RADIUS_SCALE_MAX = 1.6;
 
 const CURSOR_REPEL_RADIUS = 0.72;
 const CURSOR_REPEL_STRENGTH = 2.4;
@@ -19,6 +19,39 @@ let prevVelXY: Float32Array | null = null;
 
 function rand(a: number, b: number) {
   return a + Math.random() * (b - a);
+}
+
+/** Normalized distance from frame center below this → respawn away from center. */
+const CENTER_SPAWN_EXCLUSION = 0.7;
+
+function randomPositionAwayFromCenter(limX: number, limY: number): [number, number] {
+  for (let attempt = 0; attempt < 24; attempt++) {
+    const x = rand(-limX, limX);
+    const y = rand(-limY, limY);
+    if (Math.hypot(x / limX, y / limY) >= CENTER_SPAWN_EXCLUSION) {
+      return [x, y];
+    }
+  }
+
+  const theta = rand(0, Math.PI * 2);
+  const ring = CENTER_SPAWN_EXCLUSION + rand(0.08, 0.92);
+  return [Math.cos(theta) * ring * limX, Math.sin(theta) * ring * limY];
+}
+
+function spreadLimits(
+  frameBounds: BlobBounds | undefined,
+  baseRadius: number,
+): { limX: number; limY: number } {
+  const boundsX = frameBounds?.boundsX ?? 1.35;
+  const boundsY = frameBounds?.boundsY ?? 0.88;
+  const spreadX = boundsX * 0.98;
+  const spreadY = boundsY * 0.98;
+  const maxRadius = baseRadius * BLOB_RADIUS_SCALE_MAX;
+  const inset = maxRadius * 0.9;
+  return {
+    limX: Math.max(spreadX - inset, spreadX * 0.55),
+    limY: Math.max(spreadY - inset, spreadY * 0.55),
+  };
 }
 
 function randomBlobRadius(baseRadius: number) {
@@ -34,10 +67,15 @@ export type MetaballBlob = {
   driftPhase: number;
 };
 
-export function createHeroBlob(radius = 0.5, y = 0.06): MetaballBlob[] {
+export function createHeroBlob(
+  radius = 0.5,
+  frameBounds?: BlobBounds,
+): MetaballBlob[] {
+  const { limX, limY } = spreadLimits(frameBounds, radius);
+  const [x, y] = randomPositionAwayFromCenter(limX, limY);
   return [
     {
-      pos: [0, y, PLANE_Z],
+      pos: [x, y, PLANE_Z],
       vel: [0, 0, 0],
       radius,
       driftPhase: rand(0, Math.PI * 2),
@@ -46,11 +84,21 @@ export function createHeroBlob(radius = 0.5, y = 0.06): MetaballBlob[] {
 }
 
 /** Single blob with initial velocity (bubble2 zero-G drift on XY plane). */
-export function createDriftingHeroBlob(radius = 0.52, y = 0.06): MetaballBlob[] {
+export function createDriftingHeroBlob(
+  radius = 0.52,
+  frameBounds?: BlobBounds,
+): MetaballBlob[] {
+  const { limX, limY } = spreadLimits(frameBounds, radius);
+  const [x, y] = randomPositionAwayFromCenter(limX, limY);
+  const len = Math.hypot(x, y) || 1;
   return [
     {
-      pos: [0, y, PLANE_Z],
-      vel: [rand(-0.12, 0.12), rand(-0.1, 0.1), 0],
+      pos: [x, y, PLANE_Z],
+      vel: [
+        (x / len) * rand(0.08, 0.14) + rand(-0.04, 0.04),
+        (y / len) * rand(0.08, 0.14) + rand(-0.035, 0.035),
+        0,
+      ],
       radius: randomBlobRadius(radius),
       driftPhase: rand(0, Math.PI * 2),
     },
@@ -58,12 +106,14 @@ export function createDriftingHeroBlob(radius = 0.52, y = 0.06): MetaballBlob[] 
 }
 
 /** Random blobs (original bubble2 layout). */
-export function createBlobs(count = 6): MetaballBlob[] {
+export function createBlobs(count = 6, frameBounds?: BlobBounds): MetaballBlob[] {
   const n = Math.min(Math.max(2, count), MAX_BLOBS);
+  const { limX, limY } = spreadLimits(frameBounds, 0.52);
   const blobs: MetaballBlob[] = [];
   for (let i = 0; i < n; i++) {
+    const [x, y] = randomPositionAwayFromCenter(limX, limY);
     blobs.push({
-      pos: [rand(-1.4, 1.4), rand(-1.0, 1.0), PLANE_Z],
+      pos: [x, y, PLANE_Z],
       vel: [rand(-0.14, 0.14), rand(-0.12, 0.12), 0],
       radius: rand(0.32, 0.52),
       driftPhase: rand(0, Math.PI * 2),
@@ -82,14 +132,7 @@ export function createSpreadBlobs(
 ): MetaballBlob[] {
   const n = Math.min(Math.max(2, count), MAX_BLOBS);
   const blobs: MetaballBlob[] = [];
-  const boundsX = frameBounds?.boundsX ?? 1.35;
-  const boundsY = frameBounds?.boundsY ?? 0.88;
-  const spreadX = boundsX * 0.98;
-  const spreadY = boundsY * 0.98;
-  const maxRadius = baseRadius * BLOB_RADIUS_SCALE_MAX;
-  const inset = maxRadius * 0.9;
-  const limX = Math.max(spreadX - inset, spreadX * 0.55);
-  const limY = Math.max(spreadY - inset, spreadY * 0.55);
+  const { limX, limY } = spreadLimits(frameBounds, baseRadius);
 
   for (let i = 0; i < n; i++) {
     let x: number;
@@ -101,8 +144,7 @@ export function createSpreadBlobs(
       x = qx * limX * rand(0.72, 1);
       y = qy * limY * rand(0.72, 1);
     } else {
-      x = rand(-limX, limX);
-      y = rand(-limY, limY);
+      [x, y] = randomPositionAwayFromCenter(limX, limY);
     }
 
     const len = Math.hypot(x, y) || 1;

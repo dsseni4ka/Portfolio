@@ -8,6 +8,7 @@ import {
 } from "@/lib/about-pop-settings-store";
 import { useAboutBubbleScroll } from "@/lib/use-about-bubble-scroll";
 import AboutBubblePop from "./AboutBubblePop";
+import AboutDianaHover from "./AboutDianaHover";
 import AboutScrollBubble from "./AboutScrollBubble";
 
 type AboutSectionViewProps = {
@@ -65,10 +66,10 @@ function AboutSectionContent({ id = "about" }: AboutSectionViewProps) {
             data-about-text
             className="mx-auto w-full max-w-[min(100%,54rem)] text-justify font-sans text-[clamp(1.125rem,2.1vw,1.75rem)] font-semibold leading-[1.2] tracking-[-0.01em] [hyphens:auto] [text-align-last:left]"
           >
-            I&apos;m <AboutTag>Diana</AboutTag> 19 y/o Web Graphic Motion Creative{" "}
+            I&apos;m <AboutDianaHover>Diana</AboutDianaHover> 19 y/o Web Graphic Motion
+            Creative{" "}
             <AboutTag>designer</AboutTag> based in Eindhoven(originally from Ukraine). I
-            like <AboutTag>coffe, dance</AboutTag> and <AboutTag>my dog</AboutTag>. I like
-            to consider myself a creator, taking stuff from my imagination into reality.
+            like <AboutTag>coffe, dance</AboutTag> and <AboutTag>my dog</AboutTag>. I  consider myself a creator, taking stuff from my imagination into reality.
             It&apos;s as if I can shape my own reality.
           </p>
         </div>

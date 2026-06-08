@@ -6,6 +6,7 @@ type ProjectsDesignBoxProps = {
   y: number;
   width?: number;
   height?: number;
+  parallax?: "text" | "media";
   className?: string;
   style?: CSSProperties;
   children: ReactNode;
@@ -16,6 +17,7 @@ export default function ProjectsDesignBox({
   y,
   width,
   height,
+  parallax,
   className = "",
   style,
   children,
@@ -30,7 +32,11 @@ export default function ProjectsDesignBox({
   };
 
   return (
-    <div className={className} style={boxStyle}>
+    <div
+      className={`${parallax ? "will-change-transform" : ""} ${className}`.trim()}
+      style={boxStyle}
+      {...(parallax ? { "data-projects-parallax": parallax } : {})}
+    >
       {children}
     </div>
   );

@@ -56,6 +56,18 @@ export function isAboutInView(section: HTMLElement) {
   return rect.bottom > vh * 0.08 && rect.top < vh * 0.92;
 }
 
+/** Scroll Y that keeps a full-viewport section fully in frame (bottom aligned). */
+export function getSkillsSectionLockScrollY(section: HTMLElement) {
+  const rect = section.getBoundingClientRect();
+  const vh = window.innerHeight || 1;
+
+  if (rect.height >= vh * 0.9) {
+    return Math.max(0, Math.round(window.scrollY + rect.bottom - vh));
+  }
+
+  return getSectionScrollAnchor(section);
+}
+
 /** Scroll position that keeps about text vertically centered. */
 export function getAboutBubbleLockScrollY(section: HTMLElement) {
   const text = getAboutText(section);

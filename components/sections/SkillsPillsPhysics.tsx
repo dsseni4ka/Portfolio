@@ -1,7 +1,7 @@
 "use client";
 
 import Matter from "matter-js";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 import {
   drawSkillsPills,
@@ -22,28 +22,22 @@ import {
   SKILLS_PILL_HEIGHT_PX,
   SKILLS_PILL_LABELS,
 } from "@/lib/skills-pills-data";
+import {
+  isSkillsSectionInView,
+  SKILLS_SECTION_VISIBLE_RATIO,
+} from "@/lib/skills-section-visibility";
+import { getSkillsPillParallaxOffset } from "@/lib/use-skills-parallax";
 
 const CANVAS_DPR = 1;
-/** Start the drop once most of the skills section is on screen. */
-const SKILLS_SECTION_VISIBLE_RATIO = 0.55;
 const SPAWN_VERTICAL_GAP_PX = 28;
 const SPAWN_INTERVAL_MS = 130;
 const SIM_GRAVITY_Y = 1.08;
 const MAX_FRAME_DT_MS = 33.33;
 
-function isSkillsSectionInView(entry: IntersectionObserverEntry) {
-  if (!entry.isIntersecting) return false;
-  if (entry.intersectionRatio >= SKILLS_SECTION_VISIBLE_RATIO) return true;
-
-  const vh = window.innerHeight || 1;
-  const rect = entry.boundingClientRect;
-  const visibleHeight =
-    Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
-  return visibleHeight >= vh * SKILLS_SECTION_VISIBLE_RATIO;
-}
-
 type SkillsPillsPhysicsProps = {
   className?: string;
+  parallaxProgressRef?: RefObject<number>;
+  onReady?: (repaint: () => void) => void;
 };
 
 function buildPillDefs(measureCtx: CanvasRenderingContext2D) {
@@ -86,7 +80,11 @@ function resizeCanvas(canvas: HTMLCanvasElement, root: HTMLElement) {
   return { ctx, width: w, height: h };
 }
 
-export default function SkillsPillsPhysics({ className = "" }: SkillsPillsPhysicsProps) {
+export default function SkillsPillsPhysics({
+  className = "",
+  parallaxProgressRef,
+  onReady,
+}: SkillsPillsPhysicsProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
@@ -291,12 +289,16 @@ export default function SkillsPillsPhysics({ className = "" }: SkillsPillsPhysic
       Matter.Events.on(mouseConstraint, "mouseup", wakeOnInteraction);
 
       const paint = () => {
-        const drawList: PillDrawItem[] = pills.map((item) => {
+        const parallaxProgress = parallaxProgressRef?.current ?? 0.5;
+        const drawList: PillDrawItem[] = pills.map((item, index) => {
           const body = bodyById.get(item.id)!;
+          const parallaxY = parallaxProgressRef
+            ? getSkillsPillParallaxOffset(index, parallaxProgress)
+            : 0;
           return toDrawItem(
             item,
             body.position.x,
-            body.position.y,
+            body.position.y + parallaxY,
             body.angle,
           );
         });
@@ -347,6 +349,7 @@ export default function SkillsPillsPhysics({ className = "" }: SkillsPillsPhysic
       };
 
       paint();
+      onReady?.(paint);
       rafRef.current = requestAnimationFrame((frameTime) => {
         lastFrameMs = frameTime;
         sync(frameTime);
@@ -407,7 +410,7 @@ export default function SkillsPillsPhysics({ className = "" }: SkillsPillsPhysic
       }
       simReadyRef.current = false;
     };
-  }, [active, reducedMotion]);
+  }, [active, reducedMotion, parallaxProgressRef, onReady]);
 
   return (
     <div

@@ -1,5 +1,9 @@
 import ProjectsDesignBox from "./ProjectsDesignBox";
-import { OWOW_LANDING_PANEL, projectsPx } from "@/lib/projects-owow-panel";
+import {
+  OWOW_LANDING_PANEL,
+  PROJECTS_IMAGE_RADIUS,
+  projectsPx,
+} from "@/lib/projects-owow-panel";
 import { ProjectPanel } from "./ProjectUi";
 
 function FigmaCroppedImage({
@@ -62,6 +66,7 @@ export default function OwowLandingPanel() {
           x={wireframes.x}
           y={wireframes.y}
           width={wireframes.width}
+          parallax="text"
           className="font-sans font-medium leading-normal text-black"
           style={{ fontSize: projectsPx(wireframes.fontSize) }}
         >
@@ -73,8 +78,9 @@ export default function OwowLandingPanel() {
           y={figmaShot.y}
           width={figmaShot.width}
           height={figmaShot.height}
+          parallax="media"
           className="relative overflow-hidden"
-          style={{ borderRadius: projectsPx(figmaShot.radius) }}
+          style={{ borderRadius: projectsPx(PROJECTS_IMAGE_RADIUS) }}
         >
           <FigmaCroppedImage
             src="/projects/landing-page.png"
@@ -87,6 +93,7 @@ export default function OwowLandingPanel() {
           x={techStack.x}
           y={techStack.y}
           width={techStack.width}
+          parallax="text"
           className="font-sans font-medium leading-normal text-black"
           style={{ fontSize: projectsPx(techStack.fontSize) }}
         >
@@ -100,8 +107,9 @@ export default function OwowLandingPanel() {
           y={laptop.y}
           width={laptop.width}
           height={laptop.height}
+          parallax="media"
           className="relative overflow-hidden"
-          style={{ borderRadius: projectsPx(laptop.radius) }}
+          style={{ borderRadius: projectsPx(PROJECTS_IMAGE_RADIUS) }}
         >
           <FigmaCroppedImage
             src="/projects/owow-laptop.png"
@@ -114,6 +122,7 @@ export default function OwowLandingPanel() {
           x={contest.x}
           y={contest.y}
           width={contest.width}
+          parallax="text"
           className="font-sans font-medium leading-normal text-black"
           style={{ fontSize: projectsPx(contest.fontSize) }}
         >
@@ -125,6 +134,7 @@ export default function OwowLandingPanel() {
           y={teamPhoto.y}
           width={teamPhoto.width}
           height={teamPhoto.height}
+          parallax="media"
           className="relative overflow-hidden"
         >
           <FigmaCroppedImage

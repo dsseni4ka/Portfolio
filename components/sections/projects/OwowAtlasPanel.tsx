@@ -1,5 +1,6 @@
 import ProjectsDesignBox from "./ProjectsDesignBox";
-import { OWOW_PANEL, projectsPx } from "@/lib/projects-owow-panel";
+import { OWOW_PANEL, projectsImageFrameStyle, projectsPx } from "@/lib/projects-owow-panel";
+import ProjectsVideo from "./ProjectsVideo";
 import { ProjectPanel } from "./ProjectUi";
 
 export default function OwowAtlasPanel() {
@@ -17,22 +18,16 @@ export default function OwowAtlasPanel() {
           y={mockup.y}
           width={mockup.width}
           height={mockup.height}
-          className="relative overflow-hidden"
-          style={{ borderRadius: projectsPx(mockup.radius) }}
+          parallax="media"
+          className="relative"
+          style={projectsImageFrameStyle()}
         >
-          {/* Native img — Figma crop; next/image fill cannot set custom height */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/projects/owow-laptop.png"
-            alt="OWOW Atlas in Motion — Animation Library"
-            className="pointer-events-none absolute left-0 max-w-none"
-            style={{
-              width: "100%",
-              height: "119.63%",
-              top: "-19.63%",
-            }}
-            decoding="async"
-            fetchPriority="high"
+          <ProjectsVideo
+            src="/projects/owow-atlas-demo.webm"
+            label="OWOW Atlas in Motion — Animation Library demo"
+            objectFit="cover"
+            clipWidth={mockup.width}
+            clipHeight={mockup.height}
           />
         </ProjectsDesignBox>
 
@@ -41,6 +36,7 @@ export default function OwowAtlasPanel() {
           x={body.x}
           y={body.y}
           width={body.width}
+          parallax="text"
           className="font-sans font-medium leading-normal text-black"
           style={{ fontSize: projectsPx(body.fontSize) }}
         >
@@ -54,6 +50,7 @@ export default function OwowAtlasPanel() {
             key={tag.label}
             x={tag.x}
             y={tag.y}
+            parallax="text"
             className="font-mono font-light leading-normal whitespace-nowrap text-[#828282]"
             style={{ fontSize: projectsPx(16) }}
           >
@@ -65,6 +62,7 @@ export default function OwowAtlasPanel() {
         <ProjectsDesignBox
           x={title.x}
           y={title.y}
+          parallax="text"
           className="font-sans font-bold leading-normal whitespace-nowrap text-black"
           style={{ fontSize: projectsPx(title.fontSize) }}
         >
@@ -75,6 +73,7 @@ export default function OwowAtlasPanel() {
         <ProjectsDesignBox
           x={subtitle.x}
           y={subtitle.y}
+          parallax="text"
           className="font-year leading-normal whitespace-nowrap text-black"
           style={{ fontSize: projectsPx(subtitle.fontSize) }}
         >
@@ -85,10 +84,16 @@ export default function OwowAtlasPanel() {
         <ProjectsDesignBox
           x={visit.x}
           y={visit.y}
+          parallax="text"
           className="font-mono font-light leading-normal whitespace-nowrap text-black"
           style={{ fontSize: projectsPx(visit.fontSize) }}
         >
-          <a href="#" className="hover:opacity-60">
+          <a
+            href="https://owow-animation.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:opacity-60"
+          >
             {"{visit}"}
           </a>
         </ProjectsDesignBox>

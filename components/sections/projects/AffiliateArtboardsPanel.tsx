@@ -1,12 +1,16 @@
-import ProjectsDesignBox from "./ProjectsDesignBox";
 import {
   AFFILIATE_ARTBOARDS_PANEL,
+  getAffiliateArtboardRepeatIndices,
+  getAffiliateArtboardTileTop,
 } from "@/lib/projects-affiliate-panel";
 import { projectsPx } from "@/lib/projects-owow-panel";
 import { ProjectPanel } from "./ProjectUi";
 
+const COLUMN_DIRECTIONS = ["auto-up", "auto-down", "auto-up", "auto-down"] as const;
+
 export default function AffiliateArtboardsPanel() {
-  const { tileWidth, tileHeight, tiles } = AFFILIATE_ARTBOARDS_PANEL;
+  const { tileWidth, tileHeight, columns } = AFFILIATE_ARTBOARDS_PANEL;
+  const repeatIndices = getAffiliateArtboardRepeatIndices();
 
   return (
     <ProjectPanel
@@ -14,26 +18,51 @@ export default function AffiliateArtboardsPanel() {
       className="overflow-hidden bg-white"
     >
       <div
-        className="relative h-full w-full"
+        data-affiliate-artboards-panel
+        className="relative h-full w-full overflow-hidden"
         style={{ height: projectsPx(AFFILIATE_ARTBOARDS_PANEL.height) }}
       >
-        {tiles.map((tile) => (
-          <ProjectsDesignBox
-            key={tile.src}
-            x={tile.x}
-            y={tile.y}
-            width={tileWidth}
-            height={tileHeight}
-            className="overflow-hidden"
+        {columns.map((column, columnIndex) => (
+          <div
+            key={column.x}
+            data-artboard-column
+            data-artboard-column-direction={COLUMN_DIRECTIONS[columnIndex]}
+            className="absolute top-0 overflow-hidden"
+            style={{
+              left: projectsPx(column.x),
+              width: projectsPx(tileWidth),
+              height: "100%",
+            }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={tile.src}
-              alt={tile.alt}
-              className="pointer-events-none h-full w-full object-cover"
-              decoding="async"
-            />
-          </ProjectsDesignBox>
+            <div
+              data-artboard-column-track
+              className="relative will-change-transform"
+            >
+              {repeatIndices.flatMap((repeatIndex) =>
+                column.tiles.map((tile) => (
+                  <div
+                    key={`${column.x}-${repeatIndex}-${tile.src}`}
+                    className="absolute left-0 overflow-hidden"
+                    style={{
+                      top: projectsPx(
+                        getAffiliateArtboardTileTop(tile.y, repeatIndex),
+                      ),
+                      width: projectsPx(tileWidth),
+                      height: projectsPx(tileHeight),
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={tile.src}
+                      alt={tile.alt}
+                      className="pointer-events-none h-full w-full object-cover"
+                      decoding="async"
+                    />
+                  </div>
+                )),
+              )}
+            </div>
+          </div>
         ))}
       </div>
     </ProjectPanel>

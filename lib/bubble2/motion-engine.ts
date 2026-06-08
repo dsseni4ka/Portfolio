@@ -86,7 +86,7 @@ function rebuildBlobs(settings: BubbleSettings, mobile: boolean) {
   const frameBounds = resolveBounds(settings, mobile);
 
   if (count <= 1) {
-    s.blobs = createDriftingHeroBlob(runtime.heroBlobRadius);
+    s.blobs = createDriftingHeroBlob(runtime.heroBlobRadius, frameBounds);
   } else {
     s.blobs = createSpreadBlobs(count, frameBounds, runtime.heroBlobRadius);
   }

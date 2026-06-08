@@ -1,6 +1,6 @@
 import ProjectsDesignBox from "./ProjectsDesignBox";
 import { AFFILIATE_WORK_PANEL } from "@/lib/projects-affiliate-panel";
-import { projectsPx } from "@/lib/projects-owow-panel";
+import { PROJECTS_IMAGE_RADIUS, projectsPx } from "@/lib/projects-owow-panel";
 import { ProjectPanel } from "./ProjectUi";
 
 export default function AffiliateWorkPanel() {
@@ -21,6 +21,7 @@ export default function AffiliateWorkPanel() {
             key={tag.label}
             x={tag.x}
             y={tag.y}
+            parallax="text"
             className="font-mono font-light leading-normal whitespace-nowrap"
             style={{ fontSize: projectsPx(16) }}
           >
@@ -33,7 +34,9 @@ export default function AffiliateWorkPanel() {
           y={logo.y}
           width={logo.width}
           height={logo.height}
-          className="relative"
+          parallax="media"
+          className="relative overflow-hidden"
+          style={{ borderRadius: projectsPx(PROJECTS_IMAGE_RADIUS) }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -47,6 +50,7 @@ export default function AffiliateWorkPanel() {
         <ProjectsDesignBox
           x={scriptTitle.x}
           y={scriptTitle.y}
+          parallax="text"
           className="z-10 font-year leading-none whitespace-nowrap"
           style={{ fontSize: projectsPx(scriptTitle.fontSize) }}
         >
@@ -57,6 +61,7 @@ export default function AffiliateWorkPanel() {
           x={marketing.x}
           y={marketing.y}
           width={marketing.width}
+          parallax="text"
           className="font-sans font-medium leading-normal"
           style={{ fontSize: projectsPx(marketing.fontSize) }}
         >
@@ -69,6 +74,7 @@ export default function AffiliateWorkPanel() {
           x={techStack.x}
           y={techStack.y}
           width={techStack.width}
+          parallax="text"
           className="font-sans font-medium leading-normal"
           style={{ fontSize: projectsPx(techStack.fontSize) }}
         >
@@ -82,8 +88,9 @@ export default function AffiliateWorkPanel() {
           y={phone.y}
           width={phone.width}
           height={phone.height}
+          parallax="media"
           className="relative overflow-hidden"
-          style={{ borderRadius: projectsPx(phone.radius) }}
+          style={{ borderRadius: projectsPx(PROJECTS_IMAGE_RADIUS) }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

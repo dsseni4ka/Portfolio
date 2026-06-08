@@ -7,6 +7,8 @@ import { useRef } from "react";
 import { SITE_BACKGROUND } from "@/lib/site-colors";
 import { PROJECTS_DESIGN_HEIGHT } from "@/lib/projects-data";
 import { usePrefersReducedMotion } from "@/lib/hooks";
+import { applyAffiliateArtboardColumns } from "@/lib/projects-artboard-columns";
+import { applyProjectsParallax } from "@/lib/projects-parallax";
 import ProjectsTrack from "./projects/ProjectsTrack";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -49,6 +51,9 @@ export default function ProjectsSection({ id = "projects" }: ProjectsSectionProp
         },
       });
 
+      const cleanupParallax = applyProjectsParallax(track, tween);
+      const cleanupArtboardColumns = applyAffiliateArtboardColumns(track);
+
       const onResize = () => {
         setScale();
         ScrollTrigger.refresh();
@@ -58,6 +63,8 @@ export default function ProjectsSection({ id = "projects" }: ProjectsSectionProp
 
       return () => {
         window.removeEventListener("resize", onResize);
+        cleanupParallax();
+        cleanupArtboardColumns();
         tween.scrollTrigger?.kill();
         tween.kill();
       };

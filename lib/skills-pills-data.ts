@@ -23,11 +23,14 @@ const VARIANT_CYCLE: SkillsPillVariant[] = ["blue", "purple", "yellow", "pink"];
 
 export const SKILLS_PILL_LABELS: SkillsPillDef[] = [
   "UI/UX",
-  "Creative Coading",
+  "Creative Coding",
   "Web Animation",
   "After Effects",
   "Adobe Photoshop",
   "Adobe Illustrator",
+  "Film Making",
+  "Content Creation",
+  "Video Editing",
   "Figma",
   "GSAP",
   "Design Sysytem",

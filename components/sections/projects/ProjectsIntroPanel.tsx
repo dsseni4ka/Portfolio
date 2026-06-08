@@ -15,6 +15,7 @@ export default function ProjectsIntroPanel() {
           x={title.x}
           y={title.y}
           width={title.width}
+          parallax="text"
           className="font-sans font-bold leading-normal whitespace-nowrap text-black uppercase"
           style={{ fontSize: projectsPx(title.fontSize) }}
         >
@@ -24,6 +25,7 @@ export default function ProjectsIntroPanel() {
         <ProjectsDesignBox
           x={scrollHint.x}
           y={scrollHint.y}
+          parallax="text"
           className="font-mono font-medium leading-normal whitespace-nowrap text-accent"
           style={{ fontSize: projectsPx(scrollHint.fontSize) }}
         >

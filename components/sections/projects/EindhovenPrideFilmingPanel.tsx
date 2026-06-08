@@ -1,6 +1,6 @@
 import ProjectsDesignBox from "./ProjectsDesignBox";
 import { EINDHOVEN_PRIDE_FILMING_PANEL } from "@/lib/projects-pride-panel";
-import { projectsPx } from "@/lib/projects-owow-panel";
+import { PROJECTS_IMAGE_RADIUS, projectsPx } from "@/lib/projects-owow-panel";
 import { ProjectPanel } from "./ProjectUi";
 
 export default function EindhovenPrideFilmingPanel() {
@@ -19,7 +19,9 @@ export default function EindhovenPrideFilmingPanel() {
             y={still.y}
             width={still.width}
             height={still.height}
+            parallax="media"
             className="relative overflow-hidden"
+            style={{ borderRadius: projectsPx(PROJECTS_IMAGE_RADIUS) }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -36,14 +38,17 @@ export default function EindhovenPrideFilmingPanel() {
           y={patternWide.y}
           width={patternWide.width}
           height={patternWide.height}
+          parallax="media"
           className="relative overflow-hidden"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <video
             src={patternWide.src}
-            alt={patternWide.alt}
-            className="pointer-events-none h-full w-full object-cover"
-            decoding="async"
+            className="pointer-events-none absolute inset-0 block h-full w-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label={patternWide.alt}
           />
         </ProjectsDesignBox>
 
@@ -51,6 +56,7 @@ export default function EindhovenPrideFilmingPanel() {
           x={experience.x}
           y={experience.y}
           width={experience.width}
+          parallax="text"
           className="z-10 font-sans font-medium leading-normal text-black"
           style={{ fontSize: projectsPx(experience.fontSize) }}
         >

@@ -1,6 +1,6 @@
 import ProjectsDesignBox from "./ProjectsDesignBox";
 import { OWOW_DASHBOARD_CONTINUATION_PANEL } from "@/lib/projects-dashboard-panel";
-import { projectsPx } from "@/lib/projects-owow-panel";
+import { PROJECTS_IMAGE_RADIUS, projectsPx } from "@/lib/projects-owow-panel";
 import { ProjectPanel } from "./ProjectUi";
 
 function DashboardShot({
@@ -38,6 +38,7 @@ export default function OwowDashboardContinuationPanel() {
           x={techStack.x}
           y={techStack.y}
           width={techStack.width}
+          parallax="text"
           className="z-10 font-sans font-medium leading-normal text-black"
           style={{ fontSize: projectsPx(techStack.fontSize) }}
         >
@@ -51,7 +52,9 @@ export default function OwowDashboardContinuationPanel() {
           y={screens.y}
           width={screens.width}
           height={screens.height}
+          parallax="media"
           className="relative overflow-hidden"
+          style={{ borderRadius: projectsPx(PROJECTS_IMAGE_RADIUS) }}
         >
           <DashboardShot src={screens.src} alt={screens.alt} />
         </ProjectsDesignBox>
@@ -61,7 +64,9 @@ export default function OwowDashboardContinuationPanel() {
           y={workspace.y}
           width={workspace.width}
           height={workspace.height}
+          parallax="media"
           className="relative overflow-hidden"
+          style={{ borderRadius: projectsPx(PROJECTS_IMAGE_RADIUS) }}
         >
           <DashboardShot src={workspace.src} alt={workspace.alt} />
         </ProjectsDesignBox>
@@ -71,7 +76,9 @@ export default function OwowDashboardContinuationPanel() {
           y={designSystem.y}
           width={designSystem.width}
           height={designSystem.height}
+          parallax="media"
           className="relative z-0 overflow-hidden"
+          style={{ borderRadius: projectsPx(PROJECTS_IMAGE_RADIUS) }}
         >
           <DashboardShot src={designSystem.src} alt={designSystem.alt} />
         </ProjectsDesignBox>
@@ -80,6 +87,7 @@ export default function OwowDashboardContinuationPanel() {
           x={body.x}
           y={body.y}
           width={body.width}
+          parallax="text"
           className="z-10 font-sans font-medium leading-normal text-black"
           style={{ fontSize: projectsPx(body.fontSize) }}
         >
