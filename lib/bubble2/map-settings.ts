@@ -129,13 +129,22 @@ export function mapBubble2Runtime(
     fresnelBoost: num(settings.rayFresnelBoost, RAY_DEFAULTS.fresnelBoost),
     blobCount: Math.max(
       2,
-      Math.min(15, Math.round(num(settings.rayBlobCount, RAY_DEFAULTS.blobCount))),
+      Math.min(10, Math.round(num(settings.rayBlobCount, RAY_DEFAULTS.blobCount))),
     ),
-    metaThreshold: num(settings.rayMetaThreshold, RAY_DEFAULTS.metaThreshold),
-    metaBlend: num(settings.rayMetaBlend, RAY_DEFAULTS.metaBlend),
+    metaThreshold: Math.max(
+      1.0,
+      num(settings.rayMetaThreshold, RAY_DEFAULTS.metaThreshold),
+    ),
+    metaBlend: Math.min(
+      0.82,
+      num(settings.rayMetaBlend, RAY_DEFAULTS.metaBlend),
+    ),
     driftSpeed: num(settings.rayDriftSpeed, RAY_DEFAULTS.driftSpeed),
     bounds: num(settings.rayBounds, RAY_DEFAULTS.bounds),
-    heroBlobRadius: num(settings.rayHeroBlobRadius, RAY_DEFAULTS.heroBlobRadius),
+    heroBlobRadius: Math.min(
+      0.82,
+      num(settings.rayHeroBlobRadius, RAY_DEFAULTS.heroBlobRadius),
+    ),
     autoRotate: settings.rayAutoRotate ? 1 : 0,
     autoRotateSpeed: num(
       settings.rayAutoRotateSpeed,

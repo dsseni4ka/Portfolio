@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   useSyncExternalStore,
@@ -104,7 +105,9 @@ export function BubbleSettingsProvider({ children }: { children: ReactNode }) {
     [settings, setSetting, resetSettings],
   );
 
-  publishBubbleSettings(storeValue);
+  useLayoutEffect(() => {
+    publishBubbleSettings(storeValue);
+  }, [storeValue]);
 
   return (
     <BubbleSettingsContext.Provider value={storeValue}>

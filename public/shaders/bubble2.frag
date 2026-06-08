@@ -18,12 +18,12 @@ uniform vec4 u_settings2;
 uniform vec4 u_settings3;
 uniform vec4 u_meta; // threshold, drift scale, march steps scale, blob count
 
-uniform vec4 u_blobs[8];
+uniform vec4 u_blobs[10];
 
 out vec4 fragColor;
 
 const float PI = 3.14159265359;
-const int MAX_BLOBS = 15;
+const int MAX_BLOBS = 10;
 
 #define DISPERSION u_settings0.y
 #define FILM_STRENGTH u_settings0.z

@@ -4,22 +4,9 @@ export type HeroCursor = {
   x: number;
   y: number;
   active: boolean;
-  /** Metaball units per second (for motion-based repulsion) */
-  vx: number;
-  vy: number;
-  speed: number;
 };
 
-let cursor: HeroCursor = {
-  x: 0,
-  y: 0,
-  active: false,
-  vx: 0,
-  vy: 0,
-  speed: 0,
-};
-
-let lastCursorSampleMs = 0;
+let cursor: HeroCursor = { x: 0, y: 0, active: false };
 
 export type HeroMotionRect = {
   left: number;
@@ -53,42 +40,15 @@ export function setHeroCursorFromClient(
 
   const nx = ((clientX - left) / w) * 2 - 1;
   const ny = -(((clientY - top) / h) * 2 - 1);
-  const x = nx * boundsX;
-  const y = ny * boundsY;
-
-  const now =
-    typeof performance !== "undefined" ? performance.now() : Date.now();
-  let vx = 0;
-  let vy = 0;
-  if (lastCursorSampleMs > 0) {
-    const dt = Math.min((now - lastCursorSampleMs) * 0.001, 0.05);
-    if (dt > 1e-4) {
-      vx = (x - cursor.x) / dt;
-      vy = (y - cursor.y) / dt;
-    }
-  }
-  lastCursorSampleMs = now;
-
   cursor = {
-    x,
-    y,
+    x: nx * boundsX,
+    y: ny * boundsY,
     active: true,
-    vx,
-    vy,
-    speed: Math.hypot(vx, vy),
   };
 }
 
 export function clearHeroCursor() {
-  cursor = {
-    x: cursor.x,
-    y: cursor.y,
-    active: false,
-    vx: 0,
-    vy: 0,
-    speed: 0,
-  };
-  lastCursorSampleMs = 0;
+  cursor = { x: cursor.x, y: cursor.y, active: false };
 }
 
 export function getHeroCursor(): HeroCursor {

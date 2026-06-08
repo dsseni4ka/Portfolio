@@ -40,7 +40,7 @@ function SceneContent() {
   );
 
   const blobIndices = useMemo(() => {
-    const count = Math.min(runtime.blobCount, MAX_BLOBS, mobile ? 9 : 15);
+    const count = Math.min(runtime.blobCount, MAX_BLOBS, mobile ? 6 : 10);
     return Array.from({ length: count }, (_, i) => i);
   }, [runtime.blobCount, mobile]);
 
@@ -113,13 +113,17 @@ function SceneContent() {
   );
 }
 
-export default function BubblesScene() {
+type BubblesSceneProps = {
+  active?: boolean;
+};
+
+export default function BubblesScene({ active = true }: BubblesSceneProps) {
   const { settings } = useBubbleSettings();
 
   return (
     <Canvas
       dpr={[1, 1.5]}
-      frameloop="always"
+      frameloop={active ? "always" : "never"}
       camera={{ position: [0, 0.05, 6.2], fov: 42 }}
       gl={{
         antialias: true,

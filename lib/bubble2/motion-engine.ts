@@ -15,6 +15,8 @@ import {
   createSpreadBlobs,
   MAX_BLOBS,
   packBlobs,
+  resetBlobVelocitySmoothing,
+  syncBlobVelocitySmoothing,
   updateBlobs,
   type MetaballBlob,
 } from "@/lib/bubble2/blobs";
@@ -28,7 +30,7 @@ export type BubbleMotionSnapshot = {
 let snapshot: BubbleMotionSnapshot | null = null;
 let lastBlobConfigKey = "";
 let lastBoundsKey = "";
-let simTime = 0;
+let motionTime = 0;
 
 const listeners = new Set<() => void>();
 
@@ -39,7 +41,10 @@ function subscribe(listener: () => void) {
 
 function ensureSnapshot() {
   if (!snapshot) {
-    const blobs = createSpreadBlobs(13);
+    const frameBounds = getHeroBubbleBounds(1, {
+      layerAspect: getHeroMotionLayerAspect(),
+    });
+    const blobs = createSpreadBlobs(9, frameBounds);
     snapshot = {
       blobs,
       blobData: packBlobs(blobs),
@@ -87,8 +92,18 @@ function rebuildBlobs(settings: BubbleSettings, mobile: boolean) {
   }
 
   clampBlobsToBounds(s.blobs, frameBounds);
+  syncBlobVelocitySmoothing(s.blobs);
   packBlobs(s.blobs, s.blobData);
   publish();
+}
+
+/** Clears cached blobs (e.g. after settings migration or layout change). */
+export function resetBubbleMotion() {
+  snapshot = null;
+  lastBlobConfigKey = "";
+  lastBoundsKey = "";
+  motionTime = 0;
+  resetBlobVelocitySmoothing();
 }
 
 export function syncBubbleMotion(
@@ -97,7 +112,7 @@ export function syncBubbleMotion(
 ) {
   const runtime = mapBubble2Runtime(settings, mobile);
   const frameBounds = resolveBounds(settings, mobile);
-  const configKey = `${runtime.blobCount}:${runtime.heroBlobRadius}`;
+  const configKey = `${runtime.blobCount}:${runtime.heroBlobRadius}:${runtime.metaBlend}:${runtime.metaThreshold}`;
   const bKey = boundsKey(frameBounds);
 
   if (configKey !== lastBlobConfigKey) {
@@ -128,10 +143,11 @@ export function tickBubbleMotion(
   const runtime = mapBubble2Runtime(settings, mobile);
   const frameBounds = resolveBounds(settings, mobile);
   const s = ensureSnapshot();
-  const step = dt * runtime.driftSpeed;
-  simTime += step;
 
-  updateBlobs(s.blobs, step, { ...frameBounds, simTime });
+  motionTime += dt;
+  const stepDt = (dt * runtime.driftSpeed) / 2;
+  updateBlobs(s.blobs, stepDt, { ...frameBounds, time: motionTime });
+  updateBlobs(s.blobs, stepDt, { ...frameBounds, time: motionTime });
   packBlobs(s.blobs, s.blobData);
   publish();
 }

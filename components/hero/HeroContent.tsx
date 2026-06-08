@@ -1,49 +1,11 @@
 import Image from "next/image";
 import { FIGMA_LAYOUT } from "@/lib/figma-hero";
 
-const linkClass =
-  "font-mono pointer-events-auto absolute leading-none text-black transition-opacity hover:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black";
-
 export default function HeroContent() {
-  const { nav, letterD, iana, senik, year, portfolio } = FIGMA_LAYOUT;
+  const { letterD, iana, senik, year, portfolio } = FIGMA_LAYOUT;
 
   return (
     <>
-      <nav
-        className="absolute inset-0 z-20"
-        aria-label="Primary"
-        suppressHydrationWarning
-      >
-        <a
-          href="#about"
-          className={linkClass}
-          style={{ left: nav.about.left, top: nav.about.top, fontSize: nav.about.size }}
-          suppressHydrationWarning
-        >
-          {"{about}"}
-        </a>
-        <a
-          href="#skills"
-          className={linkClass}
-          style={{ left: nav.skills.left, top: nav.skills.top, fontSize: nav.skills.size }}
-          suppressHydrationWarning
-        >
-          {"{skills}"}
-        </a>
-        <a
-          href="#connect"
-          className={linkClass}
-          style={{
-            left: nav.connect.left,
-            top: nav.connect.top,
-            fontSize: nav.connect.size,
-          }}
-          suppressHydrationWarning
-        >
-          {"{let's connect}"}
-        </a>
-      </nav>
-
       <div
         className="pointer-events-none absolute z-[5]"
         style={{

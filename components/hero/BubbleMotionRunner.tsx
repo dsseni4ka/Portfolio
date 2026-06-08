@@ -5,43 +5,25 @@ import {
   clearHeroCursor,
   setHeroCursorFromClient,
 } from "@/lib/bubble2/hero-cursor";
-import { syncBubbleMotion, tickBubbleMotion } from "@/lib/bubble2/motion-engine";
+import {
+  resetBubbleMotion,
+  syncBubbleMotion,
+  tickBubbleMotion,
+} from "@/lib/bubble2/motion-engine";
 import {
   getHeroBubbleBounds,
-  getHeroMotionLayerAspect,
   getHeroViewportScale,
 } from "@/lib/hero-bubble-bounds";
 import { mapBubble2Runtime } from "@/lib/bubble2/map-settings";
 import { useBubbleSettings } from "@/lib/bubble-settings-store";
 import { useIsMobile, usePrefersReducedMotion } from "@/lib/hooks";
 
-function getHeroMotionRect() {
-  const layer =
-    document.querySelector("[data-hero-motion]") ??
-    document.getElementById("hero");
-  const rect = layer?.getBoundingClientRect();
-  if (!rect || rect.width < 2 || rect.height < 2) return null;
-  return {
-    left: rect.left,
-    top: rect.top,
-    width: rect.width,
-    height: rect.height,
-  };
-}
-
-function isPointerInHero(clientX: number, clientY: number) {
-  const rect = getHeroMotionRect();
-  if (!rect) return false;
-  return (
-    clientX >= rect.left &&
-    clientX <= rect.left + rect.width &&
-    clientY >= rect.top &&
-    clientY <= rect.top + rect.height
-  );
-}
+type BubbleMotionRunnerProps = {
+  active?: boolean;
+};
 
 /** Runs bubble2 zero-G drift simulation (shared by ray trace + R3F). */
-export default function BubbleMotionRunner() {
+export default function BubbleMotionRunner({ active = true }: BubbleMotionRunnerProps) {
   const { settings } = useBubbleSettings();
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -51,8 +33,11 @@ export default function BubbleMotionRunner() {
   const reducedMotion = usePrefersReducedMotion();
   const reducedRef = useRef(reducedMotion);
   reducedRef.current = reducedMotion;
+  const activeRef = useRef(active);
+  activeRef.current = active;
 
   useEffect(() => {
+    resetBubbleMotion();
     syncBubbleMotion(settingsRef.current, mobileRef.current);
 
     let animId = 0;
@@ -65,6 +50,15 @@ export default function BubbleMotionRunner() {
 
     window.addEventListener("resize", onResize, { passive: true });
 
+    const motionLayer = document.querySelector("[data-hero-motion]");
+    let layerObserver: ResizeObserver | undefined;
+    if (motionLayer) {
+      layerObserver = new ResizeObserver(() => {
+        onResize();
+      });
+      layerObserver.observe(motionLayer);
+    }
+
     const updateCursor = (clientX: number, clientY: number) => {
       const runtime = mapBubble2Runtime(
         settingsRef.current,
@@ -73,30 +67,36 @@ export default function BubbleMotionRunner() {
       const bounds = getHeroBubbleBounds(runtime.bounds, {
         mobile: mobileRef.current,
         viewportScale: getHeroViewportScale(),
-        layerAspect: getHeroMotionLayerAspect(),
       });
-      const rect = getHeroMotionRect();
+      const layer = document.querySelector("[data-hero-motion]");
+      const rect = layer?.getBoundingClientRect();
       setHeroCursorFromClient(
         clientX,
         clientY,
         bounds.boundsX,
         bounds.boundsY,
-        rect,
+        rect
+          ? {
+              left: rect.left,
+              top: rect.top,
+              width: rect.width,
+              height: rect.height,
+            }
+          : null,
       );
     };
 
     const onPointerMove = (e: PointerEvent) => {
-      if (!isPointerInHero(e.clientX, e.clientY)) {
-        clearHeroCursor();
-        return;
-      }
       updateCursor(e.clientX, e.clientY);
     };
+    const onPointerLeave = () => clearHeroCursor();
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerleave", onPointerLeave);
 
     const frame = (now: number) => {
       animId = requestAnimationFrame(frame);
+      if (!activeRef.current) return;
       if (firstFrame) {
         lastFrame = now;
         firstFrame = false;
@@ -115,8 +115,10 @@ export default function BubbleMotionRunner() {
     animId = requestAnimationFrame(frame);
     return () => {
       cancelAnimationFrame(animId);
+      layerObserver?.disconnect();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerleave", onPointerLeave);
       clearHeroCursor();
     };
   }, []);

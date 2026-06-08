@@ -3,6 +3,18 @@ import { FIGMA_FRAME } from "@/lib/figma-hero";
 /** Figma artboard aspect (1512×982). */
 export const HERO_FRAME_ASPECT = FIGMA_FRAME.width / FIGMA_FRAME.height;
 
+/** bubble2.frag camera (u_camPos.z ≈ 4.2, ray lens z = 1.65). */
+const BUBBLE_TRACE_CAM_Z = 4.2;
+const BUBBLE_TRACE_LENS_Z = 1.65;
+
+/** Visible XY half-extents at the metaball plane for a given layer aspect. */
+export function getShaderFrustumHalfExtents(aspect: number) {
+  return {
+    halfX: (BUBBLE_TRACE_CAM_Z * (aspect * 0.5)) / BUBBLE_TRACE_LENS_Z,
+    halfY: (BUBBLE_TRACE_CAM_Z * 0.5) / BUBBLE_TRACE_LENS_Z,
+  };
+}
+
 export type HeroBubbleBounds = {
   boundsX: number;
   boundsY: number;
@@ -40,14 +52,15 @@ export function getHeroBubbleBounds(
   const viewportScale = options?.viewportScale ?? 1;
   const aspect = options?.layerAspect ?? getHeroMotionLayerAspect();
 
-  const pad = 0.01;
-  const mobileTighten = mobile ? 0.96 : 1;
+  const mobileTighten = mobile ? 0.98 : 1;
   const smallScreenTighten =
-    viewportScale < 0.4 ? 0.94 : viewportScale < 0.55 ? 0.97 : 1;
+    viewportScale < 0.4 ? 0.96 : viewportScale < 0.55 ? 0.98 : 1;
 
   const scale = boundsScale * mobileTighten * smallScreenTighten;
-  const boundsY = 1.14 * scale * (1 - pad);
-  const boundsX = boundsY * aspect * (1 - pad);
+  const { halfX, halfY } = getShaderFrustumHalfExtents(aspect);
+  // Match visible canvas edges (bubble2.frag frustum at z = 0).
+  const boundsY = halfY * scale;
+  const boundsX = halfX * scale;
 
   return { boundsX, boundsY };
 }

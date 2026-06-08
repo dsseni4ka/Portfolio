@@ -67,6 +67,8 @@ export type BubbleSettings = {
   ambientLightIntensity: number;
   hemisphereLightIntensity: number;
   pointLightMultiplier: number;
+  cameraParallax: boolean;
+  cameraParallaxStrength: number;
 
   /** Hero bubble renderer */
   bubbleRenderer: "bubble2" | "r3f";
@@ -165,6 +167,8 @@ export const DEFAULT_BUBBLE_SETTINGS: BubbleSettings = {
   ambientLightIntensity: 0.45,
   hemisphereLightIntensity: 0.7,
   pointLightMultiplier: 1,
+  cameraParallax: false,
+  cameraParallaxStrength: 0,
 
   bubbleRenderer: "bubble2",
   rayRenderScale: 0.85,
@@ -183,20 +187,25 @@ export const DEFAULT_BUBBLE_SETTINGS: BubbleSettings = {
   rayWobbleSpeed: 0.85,
   rayChromaticRim: 0.22,
   rayFresnelBoost: 1.15,
-  rayBlobCount: 13,
-  rayMetaThreshold: 1.03,
-  rayMetaBlend: 0.84,
-  rayDriftSpeed: 1.55,
+  rayBlobCount: 9,
+  rayMetaThreshold: 1.06,
+  rayMetaBlend: 0.76,
+  rayDriftSpeed: 0.58,
   /** Multiplier on hero-frame bounds (see lib/hero-bubble-bounds.ts) */
-  rayBounds: 1.08,
-  rayHeroBlobRadius: 0.45,
+  rayBounds: 1.0,
+  rayHeroBlobRadius: 0.62,
   rayAutoRotate: false,
   rayAutoRotateSpeed: 0.25,
 };
 
-export const BUBBLE_SETTINGS_STORAGE_KEY = "portfolio-bubble-settings-v14";
+export const BUBBLE_SETTINGS_STORAGE_KEY = "portfolio-bubble-settings-v20";
 
 const LEGACY_STORAGE_KEYS = [
+  "portfolio-bubble-settings-v19",
+  "portfolio-bubble-settings-v18",
+  "portfolio-bubble-settings-v16",
+  "portfolio-bubble-settings-v15",
+  "portfolio-bubble-settings-v14",
   "portfolio-bubble-settings-v13",
   "portfolio-bubble-settings-v12",
   "portfolio-bubble-settings-v11",
@@ -249,29 +258,39 @@ export function mergeBubbleSettings(partial?: LegacySaved | null): BubbleSetting
   const count = merged.rayBlobCount;
   if (!Number.isFinite(count) || count < 2) {
     merged.rayBlobCount = DEFAULT_BUBBLE_SETTINGS.rayBlobCount;
-  } else if (count < 11) {
-    merged.rayBlobCount = DEFAULT_BUBBLE_SETTINGS.rayBlobCount;
-  }
-
-  if (
-    !Number.isFinite(merged.rayHeroBlobRadius) ||
-    merged.rayHeroBlobRadius < 0.36 ||
-    merged.rayHeroBlobRadius > 0.58
-  ) {
-    merged.rayHeroBlobRadius = DEFAULT_BUBBLE_SETTINGS.rayHeroBlobRadius;
   }
 
   if (
     !Number.isFinite(merged.rayDriftSpeed) ||
     merged.rayDriftSpeed > 2.5 ||
-    merged.rayDriftSpeed < 0.35
+    merged.rayDriftSpeed < 0.2
   ) {
     merged.rayDriftSpeed = DEFAULT_BUBBLE_SETTINGS.rayDriftSpeed;
   }
 
-  if (!Number.isFinite(merged.rayBounds) || merged.rayBounds > 1.6) {
+  if (!Number.isFinite(merged.rayBounds) || merged.rayBounds > 1.5) {
     merged.rayBounds = DEFAULT_BUBBLE_SETTINGS.rayBounds;
   }
+
+  if (
+    !Number.isFinite(merged.rayHeroBlobRadius) ||
+    merged.rayHeroBlobRadius > 0.88
+  ) {
+    merged.rayHeroBlobRadius = DEFAULT_BUBBLE_SETTINGS.rayHeroBlobRadius;
+  }
+
+  if (!Number.isFinite(merged.rayMetaBlend) || merged.rayMetaBlend > 0.84) {
+    merged.rayMetaBlend = DEFAULT_BUBBLE_SETTINGS.rayMetaBlend;
+  }
+
+  if (
+    !Number.isFinite(merged.rayMetaThreshold) ||
+    merged.rayMetaThreshold < 1.0
+  ) {
+    merged.rayMetaThreshold = DEFAULT_BUBBLE_SETTINGS.rayMetaThreshold;
+  }
+
+  merged.cameraParallax = false;
 
   return merged;
 }
@@ -281,14 +300,77 @@ export function readBubbleSettingsFromStorage(): BubbleSettings {
 
   try {
     let raw = localStorage.getItem(BUBBLE_SETTINGS_STORAGE_KEY);
+    let legacyKey: string | null = null;
     if (!raw) {
       for (const key of LEGACY_STORAGE_KEYS) {
         raw = localStorage.getItem(key);
-        if (raw) break;
+        if (raw) {
+          legacyKey = key;
+          break;
+        }
       }
     }
     if (!raw) return DEFAULT_BUBBLE_SETTINGS;
-    return mergeBubbleSettings(JSON.parse(raw) as LegacySaved);
+    const partial = JSON.parse(raw) as LegacySaved;
+    if (legacyKey === "portfolio-bubble-settings-v19") {
+      if (
+        partial.rayHeroBlobRadius != null &&
+        Number.isFinite(partial.rayHeroBlobRadius)
+      ) {
+        partial.rayHeroBlobRadius = Math.min(
+          0.88,
+          partial.rayHeroBlobRadius * (0.62 / 0.68),
+        );
+      }
+    }
+    if (legacyKey === "portfolio-bubble-settings-v18") {
+      if (
+        partial.rayHeroBlobRadius != null &&
+        Number.isFinite(partial.rayHeroBlobRadius)
+      ) {
+        partial.rayHeroBlobRadius = Math.min(
+          0.88,
+          partial.rayHeroBlobRadius * (0.68 / 0.6),
+        );
+      }
+    }
+    if (legacyKey === "portfolio-bubble-settings-v17") {
+      const count = partial.rayBlobCount;
+      if (count != null && Number.isFinite(count)) {
+        partial.rayBlobCount = Math.min(10, Math.round(count) + 2);
+      }
+    }
+    if (
+      legacyKey === "portfolio-bubble-settings-v16" &&
+      partial.rayHeroBlobRadius != null &&
+      Number.isFinite(partial.rayHeroBlobRadius)
+    ) {
+      partial.rayHeroBlobRadius = Math.min(
+        0.8,
+        partial.rayHeroBlobRadius * 1.2,
+      );
+    }
+    if (
+      legacyKey === "portfolio-bubble-settings-v15" &&
+      partial.rayHeroBlobRadius != null &&
+      Number.isFinite(partial.rayHeroBlobRadius)
+    ) {
+      partial.rayHeroBlobRadius = Math.min(
+        0.68,
+        partial.rayHeroBlobRadius * (0.5 / 0.41),
+      );
+    }
+    if (
+      legacyKey === "portfolio-bubble-settings-v14" &&
+      partial.rayHeroBlobRadius != null &&
+      Number.isFinite(partial.rayHeroBlobRadius)
+    ) {
+      partial.rayHeroBlobRadius = Math.min(
+        0.68,
+        partial.rayHeroBlobRadius * 1.2,
+      );
+    }
+    return mergeBubbleSettings(partial);
   } catch {
     return DEFAULT_BUBBLE_SETTINGS;
   }

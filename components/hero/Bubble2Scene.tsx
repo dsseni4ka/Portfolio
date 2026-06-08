@@ -85,11 +85,13 @@ function waitForCanvasSize(canvas: HTMLCanvasElement) {
 
 type Bubble2SceneProps = {
   className?: string;
+  active?: boolean;
   onError?: () => void;
 };
 
 export default function Bubble2Scene({
   className,
+  active = true,
   onError,
 }: Bubble2SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -107,6 +109,8 @@ export default function Bubble2Scene({
   const reducedMotion = usePrefersReducedMotion();
   const reducedMotionRef = useRef(reducedMotion);
   reducedMotionRef.current = reducedMotion;
+  const activeRef = useRef(active);
+  activeRef.current = active;
 
   useEffect(() => {
     const canvasEl = canvasRef.current;
@@ -266,7 +270,7 @@ export default function Bubble2Scene({
       await waitForCanvasSize(canvasNode);
       if (disposed) return;
 
-      const fragRes = await fetch("/shaders/bubble2.frag?v=11");
+      const fragRes = await fetch("/shaders/bubble2.frag?v=13");
       if (!fragRes.ok) throw new Error(`Shader fetch failed: ${fragRes.status}`);
       const fragSrc = await fragRes.text();
       if (disposed) return;
@@ -313,6 +317,8 @@ export default function Bubble2Scene({
     const frame = (now: number) => {
       if (disposed) return;
       animId = requestAnimationFrame(frame);
+
+      if (!activeRef.current) return;
 
       const runtime = mapBubble2Runtime(
         settingsRef.current,
