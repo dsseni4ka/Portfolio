@@ -3,6 +3,7 @@ import { MOTION_CLIPS } from "@/lib/projects-data";
 import OwowAtlasPanel from "./OwowAtlasPanel";
 import AffiliateArtboardsPanel from "./AffiliateArtboardsPanel";
 import AffiliateWorkPanel from "./AffiliateWorkPanel";
+import OwowDashboardContinuationPanel from "./OwowDashboardContinuationPanel";
 import OwowDashboardPanel from "./OwowDashboardPanel";
 import OwowLandingPanel from "./OwowLandingPanel";
 import ProjectsIntroPanel from "./ProjectsIntroPanel";
@@ -25,45 +26,7 @@ export default function ProjectsTrack() {
       <AffiliateArtboardsPanel />
 
       <OwowDashboardPanel />
-
-      {/* Design system */}
-      <ProjectPanel width={3200} className="px-[clamp(1rem,2vw,2rem)]">
-        <div className="relative h-full">
-          <div className="absolute top-[10%] left-[4%] h-[50%] w-[46%]">
-            <Image
-              src="/projects/design-system-1.png"
-              alt="OWOW design system components"
-              fill
-              className="object-contain object-left"
-              sizes="46vw"
-            />
-          </div>
-          <div className="absolute top-[8%] right-[4%] h-[48%] w-[44%]">
-            <Image
-              src="/projects/design-system-1.png"
-              alt="Design system documentation"
-              fill
-              className="object-contain object-right"
-              sizes="44vw"
-            />
-          </div>
-          <div className="absolute bottom-[14%] left-[8%] w-[40%]">
-            <ProjectSansTitle>OWOW</ProjectSansTitle>
-            <ProjectBody className="mt-6">
-              Created a full Design System from scratch.
-            </ProjectBody>
-          </div>
-          <div className="absolute right-[4%] bottom-[8%] h-[42%] w-[52%]">
-            <Image
-              src="/projects/pride-wide.png"
-              alt="Design system in product context"
-              fill
-              className="object-contain object-bottom"
-              sizes="52vw"
-            />
-          </div>
-        </div>
-      </ProjectPanel>
+      <OwowDashboardContinuationPanel />
 
       {/* Eindhoven Pride */}
       <ProjectPanel width={3600} className="px-[clamp(1rem,2vw,2rem)]">
