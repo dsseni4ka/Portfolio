@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
-import type { ProjectTag } from "@/lib/projects-data";
+import { PROJECTS_PANEL_GAP, type ProjectTag } from "@/lib/projects-data";
+import { projectsPx } from "@/lib/projects-owow-panel";
 
 export function ProjectTagPill({ label, muted }: ProjectTag) {
   return (
@@ -68,6 +69,16 @@ export function ProjectBody({
     >
       {children}
     </p>
+  );
+}
+
+export function ProjectGap() {
+  return (
+    <div
+      className="h-full shrink-0"
+      style={{ width: projectsPx(PROJECTS_PANEL_GAP) }}
+      aria-hidden
+    />
   );
 }
 

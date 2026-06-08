@@ -14,6 +14,9 @@ export type MotionClip = {
 export const PROJECTS_DESIGN_WIDTH = 27584;
 export const PROJECTS_DESIGN_HEIGHT = 982;
 
+/** Horizontal breathing room between major project groups in the scroll track. */
+export const PROJECTS_PANEL_GAP = 300;
+
 export const AFFILIATE_ARTBOARDS = Array.from({ length: 12 }, (_, i) => ({
   src: `/projects/artboard-${i + 1}.png`,
   alt: `Affiliate campaign visual ${i + 1}`,

@@ -3,12 +3,15 @@ import { MOTION_CLIPS } from "@/lib/projects-data";
 import OwowAtlasPanel from "./OwowAtlasPanel";
 import AffiliateArtboardsPanel from "./AffiliateArtboardsPanel";
 import AffiliateWorkPanel from "./AffiliateWorkPanel";
+import EindhovenPrideFilmingPanel from "./EindhovenPrideFilmingPanel";
+import EindhovenPridePanel from "./EindhovenPridePanel";
 import OwowDashboardContinuationPanel from "./OwowDashboardContinuationPanel";
 import OwowDashboardPanel from "./OwowDashboardPanel";
 import OwowLandingPanel from "./OwowLandingPanel";
 import ProjectsIntroPanel from "./ProjectsIntroPanel";
 import {
   ProjectBody,
+  ProjectGap,
   ProjectPanel,
   ProjectSansTitle,
   ProjectScriptTitle,
@@ -19,78 +22,23 @@ export default function ProjectsTrack() {
   return (
     <div className="flex h-full w-max items-stretch">
       <ProjectsIntroPanel />
+      <ProjectGap />
       <OwowAtlasPanel />
+      <ProjectGap />
       <OwowLandingPanel />
+      <ProjectGap />
 
       <AffiliateWorkPanel />
       <AffiliateArtboardsPanel />
+      <ProjectGap />
 
       <OwowDashboardPanel />
       <OwowDashboardContinuationPanel />
+      <ProjectGap />
 
-      {/* Eindhoven Pride */}
-      <ProjectPanel width={3600} className="px-[clamp(1rem,2vw,2rem)]">
-        <div className="relative h-full">
-          <div className="absolute top-[15%] left-[4%]">
-            <ProjectSansTitle>Eindhoven Pride</ProjectSansTitle>
-            <ProjectScriptTitle className="mt-4">Content Creation</ProjectScriptTitle>
-            <ProjectBody className="mt-8">
-              Motion Design and content creation
-              <br />
-              for Official Eindhoven Pride Organization
-            </ProjectBody>
-            <ProjectBody className="mt-8">
-              Experience with:
-              <br />
-              Film-grade cameras, studio lighting, story boarding and scripting
-            </ProjectBody>
-            <div className="mt-8">
-              <ProjectTagRow
-                tags={[
-                  { label: "Adobe After Effects", muted: true },
-                  { label: "Davinci Resolve", muted: true },
-                ]}
-              />
-            </div>
-          </div>
-          <div className="absolute top-[12%] right-[28%] h-[72%] w-[14%] overflow-hidden rounded-[clamp(0.75rem,1.2vw,1.2rem)]">
-            <Image
-              src="/projects/filming-drag-2.png"
-              alt="Pride content filming"
-              fill
-              className="object-cover"
-              sizes="14vw"
-            />
-          </div>
-          <div className="absolute top-[21%] right-[16%] h-[74%] w-[14%] overflow-hidden rounded-[clamp(1rem,1.6vw,2.2rem)]">
-            <Image
-              src="/projects/filming-drag-3.png"
-              alt="Pride campaign still"
-              fill
-              className="object-cover"
-              sizes="14vw"
-            />
-          </div>
-          <div className="absolute top-[13%] right-[4%] h-[85%] w-[10%] overflow-hidden rounded-[clamp(0.75rem,1.2vw,1.2rem)]">
-            <Image
-              src="/projects/filming-drag-4.png"
-              alt="Pride motion still"
-              fill
-              className="object-cover"
-              sizes="10vw"
-            />
-          </div>
-          <div className="absolute right-[2%] bottom-[8%] left-[42%] h-[38%]">
-            <Image
-              src="/projects/pride-wide.png"
-              alt="Eindhoven Pride brand visuals"
-              fill
-              className="object-contain object-bottom"
-              sizes="50vw"
-            />
-          </div>
-        </div>
-      </ProjectPanel>
+      <EindhovenPridePanel />
+      <EindhovenPrideFilmingPanel />
+      <ProjectGap />
 
       {/* Motion Design */}
       <ProjectPanel width={4200} className="px-[clamp(1rem,2vw,2rem)]">
