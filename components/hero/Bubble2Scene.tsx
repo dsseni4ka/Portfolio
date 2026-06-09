@@ -87,12 +87,14 @@ type Bubble2SceneProps = {
   className?: string;
   active?: boolean;
   onError?: () => void;
+  onReady?: () => void;
 };
 
 export default function Bubble2Scene({
   className,
   active = true,
   onError,
+  onReady,
 }: Bubble2SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { settings } = useBubbleSettings();
@@ -103,6 +105,8 @@ export default function Bubble2Scene({
   motionRef.current = motion;
   const onErrorRef = useRef(onError);
   onErrorRef.current = onError;
+  const onReadyRef = useRef(onReady);
+  onReadyRef.current = onReady;
   const mobile = useIsMobile();
   const mobileRef = useRef(mobile);
   mobileRef.current = mobile;
@@ -247,6 +251,7 @@ export default function Bubble2Scene({
     let width = 1;
     let height = 1;
     let lastRuntimeKey = "";
+    let readyFired = false;
 
     function resize(runtime: ReturnType<typeof mapBubble2Runtime>) {
       const scale = Math.max(0.5, runtime.renderScale);
@@ -343,6 +348,11 @@ export default function Bubble2Scene({
       if (!prog || width < 2 || height < 2) return;
       applyUniforms(runtime, time, width, height, blobData);
       gl2.drawArrays(gl2.TRIANGLES, 0, 3);
+
+      if (!readyFired) {
+        readyFired = true;
+        onReadyRef.current?.();
+      }
     };
 
     animId = requestAnimationFrame(frame);

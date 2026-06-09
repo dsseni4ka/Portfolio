@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { BubbleSettingsProvider } from "@/lib/bubble-settings-store";
+import { useHeroEntranceReady } from "@/lib/hero-ready-context";
 import { getHeroContentScale } from "@/lib/hero-bubble-bounds";
 import { FIGMA_FRAME } from "@/lib/figma-hero";
 
@@ -17,6 +18,7 @@ type HeroFigmaStageProps = {
 
 /** Full-viewport bubbles; Figma typography scaled and centered on top. */
 export default function HeroFigmaStage({ children }: HeroFigmaStageProps) {
+  const entranceReady = useHeroEntranceReady();
   const [contentScale, setContentScale] = useState(1);
   const [mounted, setMounted] = useState(false);
 
@@ -33,7 +35,11 @@ export default function HeroFigmaStage({ children }: HeroFigmaStageProps) {
 
   return (
     <BubbleSettingsProvider>
-      <div className="relative h-full w-full overflow-hidden">
+      <div
+        className={`relative h-full w-full overflow-hidden hero-stage-entrance ${
+          entranceReady ? "hero-stage-entrance--visible" : ""
+        }`}
+      >
         {mounted ? <BubblesCanvas /> : null}
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
           <div

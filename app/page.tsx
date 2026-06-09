@@ -1,4 +1,5 @@
 import Hero from "@/components/hero/Hero";
+import HeroEntranceShell from "@/components/hero/HeroEntranceShell";
 import SiteNav from "@/components/SiteNav";
 import AboutSection from "@/components/sections/AboutSection";
 import ConnectSection from "@/components/sections/ConnectSection";
@@ -11,8 +12,10 @@ export default function Home() {
       suppressHydrationWarning
       className="min-h-screen snap-y snap-proximity bg-background text-foreground"
     >
-      <SiteNav />
-      <Hero />
+      <HeroEntranceShell>
+        <SiteNav />
+        <Hero />
+      </HeroEntranceShell>
       <AboutSection />
       <SkillsSection />
       <ProjectsSection />

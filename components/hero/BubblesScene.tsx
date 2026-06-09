@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import ApplyBubbleEnvironment from "./ApplyBubbleEnvironment";
 import { getGlassQuality } from "@/lib/bubble-glass";
@@ -24,7 +24,19 @@ function WhiteBubbleBackdrop() {
   );
 }
 
-function SceneContent() {
+function SceneReadyNotifier({ onReady }: { onReady?: () => void }) {
+  const notifiedRef = useRef(false);
+
+  useEffect(() => {
+    if (notifiedRef.current) return;
+    notifiedRef.current = true;
+    onReady?.();
+  }, [onReady]);
+
+  return null;
+}
+
+function SceneContent({ onReady }: { onReady?: () => void }) {
   const { settings } = useBubbleSettings();
   const { scene, gl } = useThree();
   const reducedMotion = usePrefersReducedMotion();
@@ -109,15 +121,20 @@ function SceneContent() {
           maxInnerLayers={mobile ? 1 : 2}
         />
       ))}
+      <SceneReadyNotifier onReady={onReady} />
     </>
   );
 }
 
 type BubblesSceneProps = {
   active?: boolean;
+  onReady?: () => void;
 };
 
-export default function BubblesScene({ active = true }: BubblesSceneProps) {
+export default function BubblesScene({
+  active = true,
+  onReady,
+}: BubblesSceneProps) {
   const { settings } = useBubbleSettings();
 
   return (
@@ -146,7 +163,7 @@ export default function BubblesScene({ active = true }: BubblesSceneProps) {
     >
       <color attach="background" args={[BUBBLE_PALETTE.background]} />
       <Suspense fallback={null}>
-        <SceneContent />
+        <SceneContent onReady={onReady} />
       </Suspense>
     </Canvas>
   );
