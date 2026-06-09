@@ -66,10 +66,38 @@ function AboutSectionContent({ id = "about" }: AboutSectionViewProps) {
             data-about-text
             className="mx-auto w-full max-w-[min(100%,54rem)] text-justify font-sans text-[clamp(1.125rem,2.1vw,1.75rem)] font-semibold leading-[1.2] tracking-[-0.01em] [hyphens:auto] [text-align-last:left]"
           >
-            I&apos;m <AboutDianaHover>Diana</AboutDianaHover> 19 y/o Web Graphic Motion
-            Creative{" "}
-            <AboutTag>designer</AboutTag> based in Eindhoven(originally from Ukraine). I
-            like <AboutTag>coffe, dance</AboutTag> and <AboutTag>my dog</AboutTag>. I  consider myself a creator, taking stuff from my imagination into reality.
+            I&apos;m{" "}
+            <AboutDianaHover imageSrc="/about/diana-hover.jpeg">Diana</AboutDianaHover>{" "}
+            19 y/o Web Graphic Motion Creative{" "}
+            <AboutDianaHover
+              imageSrc="/about/designer-hover.jpeg"
+              side="left"
+            >
+              designer
+            </AboutDianaHover>{" "}
+            based in Eindhoven(originally from Ukraine). I
+            like{" "}
+            <AboutDianaHover
+              imageSrc="/about/coffee-hover.jpeg"
+              side="left"
+              vertical="bottom"
+            >
+              coffee
+            </AboutDianaHover>
+            ,{" "}
+            <AboutDianaHover
+              imageSrc="/about/dance-hover.jpg"
+              side="left"
+              vertical="bottom"
+            >
+              dance
+            </AboutDianaHover>{" "}
+            and{" "}
+            <AboutDianaHover imageSrc="/about/baksik-hover.jpeg" side="right">
+              my dog
+            </AboutDianaHover>
+            . I consider
+            myself a creator, taking stuff from my imagination into reality.
             It&apos;s as if I can shape my own reality.
           </p>
         </div>

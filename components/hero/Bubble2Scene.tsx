@@ -88,6 +88,7 @@ type Bubble2SceneProps = {
   active?: boolean;
   onError?: () => void;
   onReady?: () => void;
+  onProgress?: (percent: number) => void;
 };
 
 export default function Bubble2Scene({
@@ -95,6 +96,7 @@ export default function Bubble2Scene({
   active = true,
   onError,
   onReady,
+  onProgress,
 }: Bubble2SceneProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { settings } = useBubbleSettings();
@@ -107,6 +109,8 @@ export default function Bubble2Scene({
   onErrorRef.current = onError;
   const onReadyRef = useRef(onReady);
   onReadyRef.current = onReady;
+  const onProgressRef = useRef(onProgress);
+  onProgressRef.current = onProgress;
   const mobile = useIsMobile();
   const mobileRef = useRef(mobile);
   mobileRef.current = mobile;
@@ -134,6 +138,8 @@ export default function Bubble2Scene({
       onErrorRef.current?.();
       return;
     }
+
+    onProgressRef.current?.(18);
 
     const gl2 = gl;
     let disposed = false;
@@ -274,11 +280,13 @@ export default function Bubble2Scene({
     async function init() {
       await waitForCanvasSize(canvasNode);
       if (disposed) return;
+      onProgressRef.current?.(30);
 
       const fragRes = await fetch("/shaders/bubble2.frag?v=13");
       if (!fragRes.ok) throw new Error(`Shader fetch failed: ${fragRes.status}`);
       const fragSrc = await fragRes.text();
       if (disposed) return;
+      onProgressRef.current?.(52);
 
       const vs = compileShader(gl2, gl2.VERTEX_SHADER, VERT_SRC);
       const fs = compileShader(gl2, gl2.FRAGMENT_SHADER, fragSrc);
@@ -292,6 +300,7 @@ export default function Bubble2Scene({
         throw new Error("Program link failed");
       }
       gl2.useProgram(prog);
+      onProgressRef.current?.(76);
 
       for (const name of REQUIRED_UNIFORMS) {
         u[name] = gl2.getUniformLocation(prog, name);
@@ -312,6 +321,7 @@ export default function Bubble2Scene({
       syncBubbleMotion(settingsRef.current, mobileRef.current);
       refreshCubemap(runtime, 0);
       resize(runtime);
+      onProgressRef.current?.(92);
     }
 
     init().catch((err) => {

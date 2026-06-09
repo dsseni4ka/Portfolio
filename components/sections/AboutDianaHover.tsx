@@ -3,7 +3,6 @@
 import { useCallback, useState, type ReactNode } from "react";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 
-const DIANA_HOVER_IMAGE = "/about/diana-hover.jpeg";
 const PREVIEW_WIDTH = 168;
 const PREVIEW_HEIGHT = 224;
 const CURSOR_GAP = 10;
@@ -19,37 +18,67 @@ function readCursorSizePx() {
 
 type AboutDianaHoverProps = {
   children: ReactNode;
+  imageSrc: string;
+  side?: "left" | "right";
+  vertical?: "center" | "bottom";
 };
 
-export default function AboutDianaHover({ children }: AboutDianaHoverProps) {
+export default function AboutDianaHover({
+  children,
+  imageSrc,
+  side = "right",
+  vertical = "center",
+}: AboutDianaHoverProps) {
   const reducedMotion = usePrefersReducedMotion();
   const [active, setActive] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const updatePosition = useCallback((clientX: number, clientY: number) => {
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const cursorHalf = readCursorSizePx() / 2;
+  const updatePosition = useCallback(
+    (clientX: number, clientY: number) => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const cursorHalf = readCursorSizePx() / 2;
 
-    let x = clientX + cursorHalf + CURSOR_GAP;
-    const y = clientY - PREVIEW_HEIGHT / 2;
+      let x =
+        side === "left"
+          ? clientX - cursorHalf - CURSOR_GAP - PREVIEW_WIDTH
+          : clientX + cursorHalf + CURSOR_GAP;
 
-    if (x + PREVIEW_WIDTH > viewportWidth - VIEWPORT_PADDING) {
-      x = clientX - cursorHalf - CURSOR_GAP - PREVIEW_WIDTH;
-    }
+      let y =
+        vertical === "bottom"
+          ? clientY + cursorHalf + CURSOR_GAP
+          : clientY - PREVIEW_HEIGHT / 2;
 
-    const clampedX = Math.min(
-      Math.max(x, VIEWPORT_PADDING),
-      viewportWidth - PREVIEW_WIDTH - VIEWPORT_PADDING,
-    );
+      if (side === "left" && x < VIEWPORT_PADDING) {
+        x = clientX + cursorHalf + CURSOR_GAP;
+      } else if (
+        side === "right" &&
+        x + PREVIEW_WIDTH > viewportWidth - VIEWPORT_PADDING
+      ) {
+        x = clientX - cursorHalf - CURSOR_GAP - PREVIEW_WIDTH;
+      }
 
-    const clampedY = Math.min(
-      Math.max(y, VIEWPORT_PADDING),
-      viewportHeight - PREVIEW_HEIGHT - VIEWPORT_PADDING,
-    );
+      if (
+        vertical === "bottom" &&
+        y + PREVIEW_HEIGHT > viewportHeight - VIEWPORT_PADDING
+      ) {
+        y = clientY - cursorHalf - CURSOR_GAP - PREVIEW_HEIGHT;
+      }
 
-    setPosition({ x: clampedX, y: clampedY });
-  }, []);
+      const clampedX = Math.min(
+        Math.max(x, VIEWPORT_PADDING),
+        viewportWidth - PREVIEW_WIDTH - VIEWPORT_PADDING,
+      );
+
+      const clampedY = Math.min(
+        Math.max(y, VIEWPORT_PADDING),
+        viewportHeight - PREVIEW_HEIGHT - VIEWPORT_PADDING,
+      );
+
+      setPosition({ x: clampedX, y: clampedY });
+    },
+    [side, vertical],
+  );
 
   const handlePointerEnter = useCallback(
     (event: React.PointerEvent<HTMLSpanElement>) => {
@@ -75,7 +104,7 @@ export default function AboutDianaHover({ children }: AboutDianaHoverProps) {
   return (
     <>
       <span
-        data-about-diana-hover
+        data-about-word-hover
         className="relative inline-block cursor-none text-accent"
         style={{
           padding: "0.2em 0.45em",
@@ -105,7 +134,7 @@ export default function AboutDianaHover({ children }: AboutDianaHoverProps) {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={DIANA_HOVER_IMAGE}
+            src={imageSrc}
             alt=""
             className="h-full w-full object-cover"
             decoding="async"

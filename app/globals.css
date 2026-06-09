@@ -216,6 +216,13 @@ section[id] {
   transition: opacity 0.62s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.hero-loading-screen__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.35rem;
+}
+
 .hero-loading-screen--out {
   opacity: 0;
   pointer-events: none;
@@ -267,6 +274,31 @@ section[id] {
   .hero-loading-screen {
     transition: opacity 0.35s ease;
   }
+
+  .bubbles-loader-progress__fill {
+    transition: width 0.15s linear;
+  }
+}
+
+.bubbles-loader-progress {
+  width: min(168px, 42vw);
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.bubbles-loader-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent) 70%, #ffffff) 0%,
+    var(--accent) 55%,
+    color-mix(in srgb, var(--accent) 80%, #22d3ee) 100%
+  );
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 35%, transparent);
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .bubbles-loader {

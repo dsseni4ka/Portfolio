@@ -24,8 +24,18 @@ function WhiteBubbleBackdrop() {
   );
 }
 
-function SceneReadyNotifier({ onReady }: { onReady?: () => void }) {
+function SceneReadyNotifier({
+  onReady,
+  onProgress,
+}: {
+  onReady?: () => void;
+  onProgress?: (percent: number) => void;
+}) {
   const notifiedRef = useRef(false);
+
+  useEffect(() => {
+    onProgress?.(72);
+  }, [onProgress]);
 
   useEffect(() => {
     if (notifiedRef.current) return;
@@ -36,7 +46,13 @@ function SceneReadyNotifier({ onReady }: { onReady?: () => void }) {
   return null;
 }
 
-function SceneContent({ onReady }: { onReady?: () => void }) {
+function SceneContent({
+  onReady,
+  onProgress,
+}: {
+  onReady?: () => void;
+  onProgress?: (percent: number) => void;
+}) {
   const { settings } = useBubbleSettings();
   const { scene, gl } = useThree();
   const reducedMotion = usePrefersReducedMotion();
@@ -121,7 +137,7 @@ function SceneContent({ onReady }: { onReady?: () => void }) {
           maxInnerLayers={mobile ? 1 : 2}
         />
       ))}
-      <SceneReadyNotifier onReady={onReady} />
+      <SceneReadyNotifier onReady={onReady} onProgress={onProgress} />
     </>
   );
 }
@@ -129,11 +145,13 @@ function SceneContent({ onReady }: { onReady?: () => void }) {
 type BubblesSceneProps = {
   active?: boolean;
   onReady?: () => void;
+  onProgress?: (percent: number) => void;
 };
 
 export default function BubblesScene({
   active = true,
   onReady,
+  onProgress,
 }: BubblesSceneProps) {
   const { settings } = useBubbleSettings();
 
@@ -159,11 +177,12 @@ export default function BubblesScene({
         const white = new THREE.Color(BUBBLE_PALETTE.background);
         gl.setClearColor(white, 1);
         scene.background = white;
+        onProgress?.(42);
       }}
     >
       <color attach="background" args={[BUBBLE_PALETTE.background]} />
       <Suspense fallback={null}>
-        <SceneContent onReady={onReady} />
+        <SceneContent onReady={onReady} onProgress={onProgress} />
       </Suspense>
     </Canvas>
   );
