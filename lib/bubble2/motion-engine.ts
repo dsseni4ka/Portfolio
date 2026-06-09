@@ -1,7 +1,10 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { BubbleSettings } from "@/lib/bubble-settings";
+import {
+  DEFAULT_BUBBLE_SETTINGS,
+  type BubbleSettings,
+} from "@/lib/bubble-settings";
 import {
   getHeroBubbleBounds,
   getHeroMotionLayerAspect,
@@ -44,7 +47,10 @@ function ensureSnapshot() {
     const frameBounds = getHeroBubbleBounds(1, {
       layerAspect: getHeroMotionLayerAspect(),
     });
-    const blobs = createSpreadBlobs(9, frameBounds);
+    const blobs = createSpreadBlobs(
+      DEFAULT_BUBBLE_SETTINGS.rayBlobCount,
+      frameBounds,
+    );
     snapshot = {
       blobs,
       blobData: packBlobs(blobs),

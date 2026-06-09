@@ -1,7 +1,24 @@
 import type { Metadata } from "next";
 import { DM_Mono, DM_Sans, Kapakana } from "next/font/google";
+import Script from "next/script";
 import CustomCursor from "@/components/CustomCursor";
+import ResetScrollOnLoad from "@/components/ResetScrollOnLoad";
 import "./globals.css";
+
+const SCROLL_RESET_ON_RELOAD = `
+(function () {
+  try {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  } catch (e) {}
+  var nav = performance.getEntriesByType("navigation")[0];
+  if (nav && nav.type === "reload") {
+    window.scrollTo(0, 0);
+    if (location.hash) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  }
+})();
+`;
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -44,6 +61,12 @@ export default function RootLayout({
       className={`${dmSans.variable} ${dmMono.variable} ${kapakana.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
+        <Script
+          id="scroll-reset-on-reload"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: SCROLL_RESET_ON_RELOAD }}
+        />
+        <ResetScrollOnLoad />
         <CustomCursor />
         {children}
       </body>

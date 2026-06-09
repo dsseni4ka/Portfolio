@@ -187,7 +187,7 @@ export const DEFAULT_BUBBLE_SETTINGS: BubbleSettings = {
   rayWobbleSpeed: 0.85,
   rayChromaticRim: 0.22,
   rayFresnelBoost: 1.15,
-  rayBlobCount: 9,
+  rayBlobCount: 7,
   rayMetaThreshold: 1.06,
   rayMetaBlend: 0.76,
   rayDriftSpeed: 0.58,
