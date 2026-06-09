@@ -120,28 +120,29 @@ export default function AboutDianaHover({
         </span>
         {"}"}
       </span>
-      {active && !reducedMotion ? (
-        <span
-          aria-hidden
-          className="pointer-events-none fixed z-[80] overflow-hidden rounded-[0.65rem] shadow-[0_12px_40px_rgba(0,0,0,0.18)] ring-1 ring-black/10"
-          style={{
-            left: position.x,
-            top: position.y,
-            width: PREVIEW_WIDTH,
-            height: PREVIEW_HEIGHT,
-            transform: "translate3d(0,0,0)",
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={imageSrc}
-            alt=""
-            className="h-full w-full object-cover"
-            decoding="async"
-            draggable={false}
-          />
-        </span>
-      ) : null}
+      <span
+        aria-hidden
+        className="pointer-events-none fixed z-[80] overflow-hidden rounded-[0.65rem] shadow-[0_12px_40px_rgba(0,0,0,0.18)] ring-1 ring-black/10"
+        style={{
+          left: position.x,
+          top: position.y,
+          width: PREVIEW_WIDTH,
+          height: PREVIEW_HEIGHT,
+          visibility: active && !reducedMotion ? "visible" : "hidden",
+          transform: "translate3d(0,0,0)",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imageSrc}
+          alt=""
+          className="h-full w-full object-cover"
+          loading="eager"
+          decoding="sync"
+          fetchPriority="high"
+          draggable={false}
+        />
+      </span>
     </>
   );
 }
