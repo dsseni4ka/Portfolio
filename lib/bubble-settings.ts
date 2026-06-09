@@ -137,7 +137,7 @@ export const DEFAULT_BUBBLE_SETTINGS: BubbleSettings = {
   sheen: 1,
   sheenRoughness: 0.93,
 
-  iridescence: 0.64,
+  iridescence: 0.55,
   iridescenceIOR: 2,
   iridescenceThicknessMin: 580,
   iridescenceThicknessMax: 820,
@@ -168,7 +168,7 @@ export const DEFAULT_BUBBLE_SETTINGS: BubbleSettings = {
   hemisphereLightIntensity: 0.7,
   pointLightMultiplier: 1,
   cameraParallax: false,
-  cameraParallaxStrength: 0,
+  cameraParallaxStrength: 0.6,
 
   bubbleRenderer: "bubble2",
   rayRenderScale: 0.85,
@@ -179,28 +179,29 @@ export const DEFAULT_BUBBLE_SETTINGS: BubbleSettings = {
   rayUseCubemap: true,
   rayAnimateEnv: true,
   rayThinFilm: true,
-  rayFilmStrengthScale: 1.15,
+  rayFilmStrengthScale: 0.85,
   rayFilmIOR: 1.33,
   rayShellThick: 0.01,
   rayHollowPower: 2.0,
-  rayWobbleAmp: 0.045,
+  rayWobbleAmp: 0.048,
   rayWobbleSpeed: 0.85,
   rayChromaticRim: 0.22,
   rayFresnelBoost: 1.15,
   rayBlobCount: 7,
-  rayMetaThreshold: 1.06,
-  rayMetaBlend: 0.76,
-  rayDriftSpeed: 0.58,
+  rayMetaThreshold: 1.05,
+  rayMetaBlend: 0.55,
+  rayDriftSpeed: 2,
   /** Multiplier on hero-frame bounds (see lib/hero-bubble-bounds.ts) */
-  rayBounds: 1.0,
-  rayHeroBlobRadius: 0.62,
+  rayBounds: 0.92,
+  rayHeroBlobRadius: 0.73,
   rayAutoRotate: false,
-  rayAutoRotateSpeed: 0.25,
+  rayAutoRotateSpeed: 0.52,
 };
 
-export const BUBBLE_SETTINGS_STORAGE_KEY = "portfolio-bubble-settings-v20";
+export const BUBBLE_SETTINGS_STORAGE_KEY = "portfolio-bubble-settings-v21";
 
 const LEGACY_STORAGE_KEYS = [
+  "portfolio-bubble-settings-v20",
   "portfolio-bubble-settings-v19",
   "portfolio-bubble-settings-v18",
   "portfolio-bubble-settings-v16",

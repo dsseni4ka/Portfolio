@@ -4,7 +4,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
@@ -12,10 +11,8 @@ import {
   type ReactNode,
 } from "react";
 import {
-  BUBBLE_SETTINGS_STORAGE_KEY,
   DEFAULT_BUBBLE_SETTINGS,
   mergeBubbleSettings,
-  readBubbleSettingsFromStorage,
   type BubbleSettings,
 } from "@/lib/bubble-settings";
 
@@ -76,17 +73,6 @@ export function useBubbleSettings(): BubbleSettingsContextValue {
 
 export function BubbleSettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState(DEFAULT_BUBBLE_SETTINGS);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setSettings(readBubbleSettingsFromStorage());
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    localStorage.setItem(BUBBLE_SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-  }, [settings, hydrated]);
 
   const setSetting = useCallback(
     <K extends keyof BubbleSettings>(key: K, value: BubbleSettings[K]) => {
@@ -97,7 +83,6 @@ export function BubbleSettingsProvider({ children }: { children: ReactNode }) {
 
   const resetSettings = useCallback(() => {
     setSettings(DEFAULT_BUBBLE_SETTINGS);
-    localStorage.removeItem(BUBBLE_SETTINGS_STORAGE_KEY);
   }, []);
 
   const storeValue = useMemo(
