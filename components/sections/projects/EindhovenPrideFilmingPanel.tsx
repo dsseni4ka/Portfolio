@@ -44,7 +44,6 @@ export default function EindhovenPrideFilmingPanel() {
           <video
             src={patternWide.src}
             className="pointer-events-none absolute inset-0 block h-full w-full object-cover"
-            autoPlay
             loop
             muted
             playsInline

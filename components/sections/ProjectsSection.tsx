@@ -3,12 +3,16 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { SITE_BACKGROUND } from "@/lib/site-colors";
 import { PROJECTS_DESIGN_HEIGHT } from "@/lib/projects-data";
 import { usePrefersReducedMotion } from "@/lib/hooks";
 import { applyAffiliateArtboardColumns } from "@/lib/projects-artboard-columns";
 import { applyProjectsParallax } from "@/lib/projects-parallax";
+import {
+  pauseProjectsVideos,
+  playProjectsVideos,
+} from "@/lib/projects-video-playback";
 import ProjectsTrack from "./projects/ProjectsTrack";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -54,6 +58,20 @@ export default function ProjectsSection({ id = "projects" }: ProjectsSectionProp
       const cleanupParallax = applyProjectsParallax(track, tween);
       const cleanupArtboardColumns = applyAffiliateArtboardColumns(track);
 
+      const playbackTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "bottom top",
+        onEnter: () => playProjectsVideos(track),
+        onEnterBack: () => playProjectsVideos(track),
+        onLeave: () => pauseProjectsVideos(track),
+        onLeaveBack: () => pauseProjectsVideos(track),
+      });
+
+      if (playbackTrigger.isActive) {
+        playProjectsVideos(track);
+      }
+
       const onResize = () => {
         setScale();
         ScrollTrigger.refresh();
@@ -65,12 +83,36 @@ export default function ProjectsSection({ id = "projects" }: ProjectsSectionProp
         window.removeEventListener("resize", onResize);
         cleanupParallax();
         cleanupArtboardColumns();
+        playbackTrigger.kill();
         tween.scrollTrigger?.kill();
         tween.kill();
       };
     },
     { scope: sectionRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
+
+  useEffect(() => {
+    if (!reducedMotion) return;
+
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          playProjectsVideos(track);
+          return;
+        }
+
+        pauseProjectsVideos(track);
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
 
   if (reducedMotion) {
     return (

@@ -53,7 +53,6 @@ export default function ProjectsVideo({
           objectFit,
           clipPath: fixedRadiusClip ?? `url(#${clipId})`,
         }}
-        autoPlay
         loop
         muted
         playsInline
