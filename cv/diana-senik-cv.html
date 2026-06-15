@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diana Senik — CV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #ffffff;
+        --fg: #0e0e0f;
+        --accent: #e703da;
+        --muted: #5a5a5a;
+        --rule: #c8c8c8;
+      }
+
+      html,
+      body {
+        width: 210mm;
+        min-height: 297mm;
+        font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+        font-size: 9.25pt;
+        font-weight: 500;
+        line-height: 1.35;
+        color: var(--fg);
+        background: var(--bg);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .page {
+        width: 210mm;
+        height: 297mm;
+        padding: 11mm 15mm 8mm;
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        gap: 5.5mm;
+      }
+
+      /* Header */
+      .header {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 5.5mm;
+        align-items: stretch;
+        padding-bottom: 5mm;
+        border-bottom: 0.4pt solid var(--rule);
+      }
+
+      .photo-wrap {
+        width: 30mm;
+        flex-shrink: 0;
+      }
+
+      .photo {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .identity {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+      }
+
+      .identity h1 {
+        font-size: 22pt;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 2mm;
+      }
+
+      .identity .role {
+        font-size: 10.5pt;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 2.5mm;
+      }
+
+      .identity .tagline {
+        font-size: 8.75pt;
+        color: var(--muted);
+        max-width: 125mm;
+        line-height: 1.4;
+      }
+
+      .contact {
+        margin-top: auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5mm 5mm;
+        font-family: "DM Mono", ui-monospace, monospace;
+        font-size: 7.25pt;
+        font-weight: 500;
+      }
+
+      .contact a {
+        color: var(--fg);
+        text-decoration: none;
+      }
+
+      .contact span {
+        color: var(--muted);
+      }
+
+      /* Body grid */
+      .body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5.5mm 7mm;
+        align-content: start;
+      }
+
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      section h2 {
+        font-family: "DM Mono", ui-monospace, monospace;
+        font-size: 7.5pt;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+        margin-bottom: 2.5mm;
+      }
+
+      /* Summary */
+      .summary p {
+        font-size: 8.75pt;
+        line-height: 1.38;
+      }
+
+      /* Skills */
+      .skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5mm;
+      }
+
+      .skill {
+        font-size: 7.5pt;
+        font-weight: 600;
+        padding: 1.2mm 2.8mm;
+        border-radius: 99px;
+        background: #fff;
+        border: 0.4pt solid var(--rule);
+        white-space: nowrap;
+      }
+
+      /* Experience & projects */
+      .entry {
+        margin-bottom: 3.5mm;
+      }
+
+      .entry:last-child {
+        margin-bottom: 0;
+      }
+
+      .entry-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 3mm;
+        margin-bottom: 0.8mm;
+      }
+
+      .entry-title {
+        font-size: 9.5pt;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .entry-meta {
+        font-family: "DM Mono", ui-monospace, monospace;
+        font-size: 6.75pt;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .entry-date {
+        font-family: "DM Mono", ui-monospace, monospace;
+        font-size: 7pt;
+        font-weight: 500;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .entry-period {
+        font-family: "DM Mono", ui-monospace, monospace;
+        font-size: 7pt;
+        font-weight: 500;
+        color: var(--muted);
+        margin-bottom: 0.5mm;
+      }
+
+      .entry-sub {
+        font-size: 8.25pt;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 1mm;
+      }
+
+      .entry ul {
+        padding-left: 3.5mm;
+        font-size: 8.25pt;
+        line-height: 1.32;
+      }
+
+      .entry li {
+        margin-bottom: 0.4mm;
+      }
+
+      .entry li:last-child {
+        margin-bottom: 0;
+      }
+
+      .highlight {
+        font-weight: 600;
+        color: var(--fg);
+      }
+
+      /* Education */
+      .edu-entry .entry-title {
+        font-size: 9pt;
+      }
+
+      .footer-note {
+        grid-column: 1 / -1;
+        padding-top: 3mm;
+        border-top: 0.4pt solid var(--rule);
+        font-size: 7.5pt;
+        color: var(--muted);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-note strong {
+        color: var(--fg);
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <div class="photo-wrap">
+          <img
+            class="photo"
+            src="./diana-photo.png"
+            alt="Diana Senik"
+          />
+        </div>
+        <div class="identity">
+          <h1>Diana Senik</h1>
+          <p class="role">Front-End · Graphic · Motion Creative Designer</p>
+          <p class="tagline">
+            19-year-old creator based in Eindhoven, Netherlands. I turn ideas
+            from imagination into polished digital experiences — from brand
+            visuals and motion to interactive web interfaces.
+          </p>
+          <div class="contact">
+            <a href="mailto:hello@dianasenik.com">hello@dianasenik.com</a>
+            <span>·</span>
+            <a href="tel:+380686341780">+380 68 634 17 80</a>
+            <span>·</span>
+            <a href="https://www.linkedin.com/in/diana-senik-181897329"
+              >LinkedIn</a
+            >
+            <span>·</span>
+            <span>Eindhoven, NL</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="body">
+        <section class="summary full">
+          <h2>Profile</h2>
+          <p>
+            Creative visual designer seeking an internship at a
+            front-end, graphic design, or creative agency. Experienced delivering
+            real client work — from campaign visuals and motion content to
+            full-stack web products — with a strong eye for UI, animation, and
+            brand storytelling. Comfortable owning a brief from concept through
+            Figma, code, and deployment.
+          </p>
+        </section>
+
+        <section class="skills full">
+          <h2>Core Skills</h2>
+          <div class="skills">
+            <span class="skill">UI/UX Design</span>
+            <span class="skill">Web Design</span>
+            <span class="skill">Graphic Design</span>
+            <span class="skill">Motion Design</span>
+            <span class="skill">Figma</span>
+            <span class="skill">Adobe Photoshop</span>
+            <span class="skill">Adobe Illustrator</span>
+            <span class="skill">After Effects</span>
+            <span class="skill">React</span>
+            <span class="skill">Next.js</span>
+            <span class="skill">GSAP</span>
+            <span class="skill">Creative Coding</span>
+            <span class="skill">Design Systems</span>
+            <span class="skill">Video Editing</span>
+            <span class="skill">Content Creation</span>
+          </div>
+        </section>
+
+        <section>
+          <h2>Experience</h2>
+
+          <article class="entry">
+            <div class="entry-header">
+              <div class="entry-title">OWOW</div>
+              <div class="entry-meta">Netherlands · Client work</div>
+            </div>
+            <p class="entry-sub">Front-End Developer &amp; Designer</p>
+            <ul>
+              <li>
+                Built <span class="highlight">Atlas in Motion</span>
+                <span class="entry-date">{Apr 2026 – May 2026}</span> — a
+                full-stack animation library (Next.js, React, GSAP) for OWOW
+                clients.
+              </li>
+              <li>
+                Designed and shipped a landing page from Figma wireframes to
+                production;
+                <span class="highlight">#1 place out of 50+ contestants</span>.
+              </li>
+              <li>
+                Developed a client success
+                <span class="highlight">dashboard</span>
+                <span class="entry-date">{Jan 2026 – Mar 2026}</span> and a full
+                <span class="highlight">design system</span> from scratch
+                (Figma, Next.js, React, Vercel).
+              </li>
+            </ul>
+          </article>
+
+          <article class="entry">
+            <div class="entry-header">
+              <div class="entry-title">Eindhoven Pride</div>
+              <div class="entry-meta">Official organisation</div>
+            </div>
+            <p class="entry-period">{Sep 2025 – Dec 2025}</p>
+            <p class="entry-sub">Motion Designer &amp; Content Creator</p>
+            <ul>
+              <li>
+                Motion design and social content for the official Eindhoven
+                Pride organisation.
+              </li>
+              <li>
+                Filming experience with film-grade cameras, studio lighting,
+                storyboarding, and scripting.
+              </li>
+            </ul>
+          </article>
+
+          <article class="entry">
+            <div class="entry-header">
+              <div class="entry-title">Affiliate Agency</div>
+              <div class="entry-meta">Ukraine</div>
+            </div>
+            <p class="entry-period">{May 2025 – Aug 2025}</p>
+            <p class="entry-sub">Graphic Designer &amp; Content Creator</p>
+            <ul>
+              <li>
+                Marketing and branding content for a renowned affiliate agency.
+              </li>
+              <li>
+                Campaign visuals using Photoshop, Illustrator, Midjourney, and
+                AI-assisted workflows.
+              </li>
+            </ul>
+          </article>
+        </section>
+
+        <section>
+          <h2>Selected Projects</h2>
+
+          <article class="entry">
+            <div class="entry-header">
+              <div class="entry-title">Interactive Portfolio</div>
+              <div class="entry-meta">{2026}</div>
+            </div>
+            <ul>
+              <li>
+                Creative-coded portfolio with WebGL, GSAP scroll animation, and
+                physics-driven UI (Next.js, Three.js, Matter.js).
+              </li>
+            </ul>
+          </article>
+
+          <article class="entry">
+            <div class="entry-header">
+              <div class="entry-title">Motion Design Project</div>
+              <div class="entry-meta">Personal</div>
+            </div>
+            <p class="entry-period">{May 2025 – Jun 2025}</p>
+            <ul>
+              <li>
+                After Effects kinetic typography and short-form animations across
+                experimental projects.
+              </li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="full">
+          <h2>Education</h2>
+          <article class="entry edu-entry">
+            <div class="entry-header">
+              <div class="entry-title">Fontys University of Applied Sciences</div>
+              <div class="entry-meta">Eindhoven</div>
+            </div>
+            <p class="entry-period">{Sep 2024 – Present}</p>
+            <ul>
+              <li>
+                Studying ICT — Front-End Development and Media Design.
+              </li>
+            </ul>
+          </article>
+        </section>
+
+        <div class="footer-note">
+          <span>
+            Portfolio:
+            <strong>dianasenik.com</strong>
+          </span>
+          <span>Available for internship · {Autumn/Winter 2026}</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -7,7 +7,8 @@ import { ProjectPanel } from "./ProjectUi";
 const PRIDE_VIDEO_RADIUS_PX = 20;
 
 export default function EindhovenPridePanel() {
-  const { motion, subtitle, title, tags, logo, pattern } = EINDHOVEN_PRIDE_PANEL;
+  const { motion, subtitle, title, tags, logo, pattern, outside } =
+    EINDHOVEN_PRIDE_PANEL;
 
   return (
     <ProjectPanel width={EINDHOVEN_PRIDE_PANEL.width} className="bg-[#e7e7e7]">
@@ -55,6 +56,28 @@ export default function EindhovenPridePanel() {
             objectFit="cover"
             clipWidth={pattern.width}
             clipHeight={pattern.height}
+            clipRadiusPx={PRIDE_VIDEO_RADIUS_PX}
+          />
+        </ProjectsDesignBox>
+
+        <ProjectsDesignBox
+          x={outside.x}
+          y={outside.y}
+          width={outside.width}
+          height={outside.height}
+          parallax="media"
+          className="relative overflow-hidden"
+          style={{
+            borderRadius: `${PRIDE_VIDEO_RADIUS_PX}px`,
+            transform: "translateZ(0)",
+          }}
+        >
+          <ProjectsVideo
+            src={outside.src}
+            label={outside.alt}
+            objectFit="cover"
+            clipWidth={outside.width}
+            clipHeight={outside.height}
             clipRadiusPx={PRIDE_VIDEO_RADIUS_PX}
           />
         </ProjectsDesignBox>

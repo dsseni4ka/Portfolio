@@ -1,8 +1,22 @@
 import { PROJECTS_IMAGE_RADIUS } from "@/lib/projects-owow-panel";
 
 /** Eindhoven Pride intro — Figma global x=16307 … 18484 (node 88:151). */
+const EINDHOVEN_PRIDE_LOGO_X = 1314;
+const EINDHOVEN_PRIDE_LOGO_Y = 119;
+const EINDHOVEN_PRIDE_LOGO_WIDTH = 396;
+const EINDHOVEN_PRIDE_LOGO_HEIGHT = 703;
+const EINDHOVEN_PRIDE_PATTERN_X = 1768;
+const EINDHOVEN_PRIDE_PATTERN_WIDTH = 409;
+const PRIDE_VIDEO_GAP =
+  EINDHOVEN_PRIDE_PATTERN_X -
+  (EINDHOVEN_PRIDE_LOGO_X + EINDHOVEN_PRIDE_LOGO_WIDTH);
+
 export const EINDHOVEN_PRIDE_PANEL = {
-  width: 2177,
+  width:
+    EINDHOVEN_PRIDE_PATTERN_X +
+    EINDHOVEN_PRIDE_PATTERN_WIDTH +
+    PRIDE_VIDEO_GAP +
+    EINDHOVEN_PRIDE_LOGO_WIDTH,
   height: 982,
   motion: {
     x: 799,
@@ -25,22 +39,34 @@ export const EINDHOVEN_PRIDE_PANEL = {
     { x: 213, y: 821, label: "Davinci Resolve" },
   ],
   logo: {
-    x: 1314,
-    y: 119,
-    width: 396,
-    height: 703,
+    x: EINDHOVEN_PRIDE_LOGO_X,
+    y: EINDHOVEN_PRIDE_LOGO_Y,
+    width: EINDHOVEN_PRIDE_LOGO_WIDTH,
+    height: EINDHOVEN_PRIDE_LOGO_HEIGHT,
     radius: PROJECTS_IMAGE_RADIUS,
     src: "/projects/pride-logo.webm",
     alt: "Eindhoven Pride logo animation",
   },
   pattern: {
-    x: 1768,
+    x: EINDHOVEN_PRIDE_PATTERN_X,
     y: 207,
-    width: 409,
+    width: EINDHOVEN_PRIDE_PATTERN_WIDTH,
     height: 727,
     radius: PROJECTS_IMAGE_RADIUS,
     src: "/projects/pride-theme-reveal.webm",
     alt: "Eindhoven Pride theme reveal animation",
+  },
+  outside: {
+    x:
+      EINDHOVEN_PRIDE_PATTERN_X +
+      EINDHOVEN_PRIDE_PATTERN_WIDTH +
+      PRIDE_VIDEO_GAP,
+    y: EINDHOVEN_PRIDE_LOGO_Y,
+    width: EINDHOVEN_PRIDE_LOGO_WIDTH,
+    height: EINDHOVEN_PRIDE_LOGO_HEIGHT,
+    radius: PROJECTS_IMAGE_RADIUS,
+    src: "/projects/pride-outside.webm",
+    alt: "Eindhoven Pride outdoor filming",
   },
 } as const;
 
