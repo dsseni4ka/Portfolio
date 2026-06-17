@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { DM_Mono, DM_Sans, Kapakana } from "next/font/google";
 import Script from "next/script";
 import CustomCursor from "@/components/CustomCursor";
@@ -69,6 +70,7 @@ export default function RootLayout({
         <ResetScrollOnLoad />
         <CustomCursor />
         {children}
+        <Analytics />
       </body>
     </html>
   );
